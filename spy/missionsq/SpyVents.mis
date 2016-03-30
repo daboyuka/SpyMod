@@ -1,0 +1,416 @@
+// Call to reset the parameters, set $SpyVents::customParams to override.
+function SpyVents::defaultParams() {
+  $SpyVents::blockSize = 8;
+  $SpyVents::blockInteriorSize = 8;
+
+  $SpyVents::dimensions = "11 11 5";
+  $SpyVents::numIters = 35;
+  $SpyVents::maxTunnelLength = 11;
+
+  // 0 = x tunnel, 1 = y, 2 = z
+  $SpyVents::chance[0] = 0.4;
+  $SpyVents::chance[1] = 0.4;
+  $SpyVents::chance[2] = 0.2;
+  $SpyVents::totalChance = 1;
+  $SpyVents::chances = 3;
+
+  $SpyVents::numSpawnPoints = 15;
+
+  $SpyVents::boxChance = 0.1;
+}
+
+if (!$SpyVents::customParams) SpyVents::defaultParams();
+
+setSpawnBuyList($ITEM_SET_DM);
+
+exec(dm);
+$DMScoreLimit = 0;
+$Game::missionType = "DM";
+$cdTrack = 3;
+$cdPlayMode = 1;
+
+//--- export object begin ---//
+instant SimGroup "MissionGroup" {
+	instant SimGroup "Volumes" {
+		instant SimVolume "InterfaceVol" {
+			fileName = "Interface.vol";
+		};
+		instant SimVolume "entities" {
+			fileName = "Entities.vol";
+		};
+		instant SimVolume "World" {
+			fileName = "lushWorld.vol";
+		};
+		instant SimVolume "WorldTerrain" {
+			fileName = "lushTerrain.vol";
+		};
+		instant SimVolume "lushDML" {
+			fileName = "lushDML.vol";
+		};
+		instant SimVolume "savanaDML" {
+			fileName = "savanaDML.vol";
+		};
+		instant SimVolume "human1DML" {
+			fileName = "human1DML.vol";
+		};
+		instant SimVolume "tedFile" {
+			fileName = "Raindance.ted";
+			locked = "true";
+		};
+	};
+	instant SimGroup "World" {
+		instant SimPalette "palette" {
+			fileName = "lush.night.ppl";
+		};
+		instant MissionCenterPos "MissionCenter" {
+			x = "-350";
+			y = "-350";
+			w = "700";
+			h = "700";
+		};
+	};
+	instant SimGroup "Landscape" {
+		instant StarField "stars" {
+			inFrontOfSky = "True";
+			colors[0] = "1 1 1";
+			colors[1] = "0.5 0.5 0.5";
+			colors[2] = "0.25 0.25 0.25";
+		};
+		instant Sky "Sky" {
+			dmlName = "";
+			skyColor = "0 0 0";
+			hazeColor = "0 0 0";
+			featurePosition = "0";
+			size = "600";
+			textures[0] = "0";
+			textures[1] = "1";
+			textures[2] = "2";
+			textures[3] = "3";
+			textures[4] = "4";
+			textures[5] = "5";
+			textures[6] = "6";
+			textures[7] = "7";
+			textures[8] = "8";
+			textures[9] = "9";
+			textures[10] = "10";
+			textures[11] = "11";
+			textures[12] = "12";
+			textures[13] = "13";
+			textures[14] = "14";
+			textures[15] = "15";
+		};
+		instant Planet "Sun" {
+			fileName = "";
+			azimuth = "0";
+			incidence = "60";
+			castShadows = "True";
+			useLensFlare = "False";
+			intensity = "0.699986 0.699986 0.699986";
+			ambient = "0.299986 0.299986 0.299986";
+			size = "2000";
+			distance = "11000";
+		};
+		instant SimTerrain "Terrain" {
+			tedFileName = "Raindance.dtf";
+			visibleDistance = "400";
+			hazeDistance = "250";
+			hazeVerticalMin = "9.88128e-39";
+			hazeVerticalMax = "8.10714e-39";
+			perspectiveDistance = "100";
+			screenSize = "61";
+			contGravity = "0 0 -20";
+			contDrag = "0";
+			contHeight = "10000";
+			position = "-768 -768 -1000";
+			rotation = "0 0 0";
+			terrainType = "flat";
+		};
+	};
+	instant SimGroup "Lights";
+	instant SimGroup "Teams" {
+		instant TeamGroup "team0" {
+			instant SimGroup "DropPoints" {
+				instant SimGroup "start";
+				instant SimGroup "random";
+			};
+		};
+	};
+	instant StaticShape "Generator" {
+		dataBlock = "Generator";
+		position = "0 0 -10000";
+	};
+	instant InteriorShape "Q" {
+		filename = "logo2.dis";
+		position = "0 0 -10000";
+	};
+};
+
+
+
+// Returns an integer in [%a, %b)
+function rand(%a, %b) {
+  return %a + floor(getRandom() * (%b - %a));
+}
+
+function SpyVents::genMap(%pos) {
+  %pos = Vector::mul(Vector::add($SpyVents::dimensions, "-1 -1 -1"), 0.5);
+
+  %lo = -1;
+
+  for (%i = 0; %i < $SpyVents::numIters; %i++) {
+    %x = getRandom();
+
+    %tc = 0;
+    for (%j = 0; %j < $SpyVents::chances; %j++)
+      if (%j != %lo) %tc += $SpyVents::chance[%j];
+
+    %x *= %tc / $SpyVents::totalChance;
+
+    for (%o = 0; %o < $SpyVents::chances; %o++) {
+      if (%o == %lo) continue;
+      if (%x < $SpyVents::chance[%o]) break;
+      %x -= $SpyVents::chance[%o];
+    }
+
+    %lo = %o;
+
+    if (%o == 0) {
+      %oldX = getWord(%pos, 0);
+      %newX = rand(max(0, %oldX-($SpyVents::maxTunnelLength-1)), min(getWord($SpyVents::dimensions, 0), %oldX+($SpyVents::maxTunnelLength-1)));
+
+      for (%ix = min(%oldX, %newX); %ix <= max(%oldX, %newX); %ix++) {
+        %map[%ix, getWord(%pos, 1), getWord(%pos, 2)] = 1;
+      }
+
+      %pos = %newX @ " " @ getWord(%pos, 1) @ " " @ getWord(%pos, 2);
+    }
+
+    if (%o == 1) {
+      %oldY = getWord(%pos, 1);
+      %newY = rand(max(0, %oldY-($SpyVents::maxTunnelLength-1)), min(getWord($SpyVents::dimensions, 1), %oldY+($SpyVents::maxTunnelLength-1)));
+
+      for (%iy = min(%oldY, %newY); %iy <= max(%oldY, %newY); %iy++) {
+        %map[getWord(%pos, 0), %iy, getWord(%pos, 2)] = 1;
+      }
+
+      %pos = getWord(%pos, 0) @ " " @ %newY @ " " @ getWord(%pos, 2);
+    }
+
+    if (%o == 2) {
+      %oldZ = getWord(%pos, 2);
+      %newZ = rand(max(0, %oldZ-($SpyVents::maxTunnelLength-1)), min(getWord($SpyVents::dimensions, 2), %oldZ+($SpyVents::maxTunnelLength-1)));
+
+      for (%iz = min(%oldZ, %newZ); %iz <= max(%oldZ, %newZ); %iz++) {
+        %map[getWord(%pos, 0), getWord(%pos, 1), %iz] = 1;
+      }
+
+      %pos = getWord(%pos, 0) @ " " @ getWord(%pos, 1) @ " " @ %newZ;
+    }
+  }
+
+  %g = newObject("Vents", SimGroup);
+  addToSet(MissionGroup, %g);
+
+  for (%x = 0; %x < getWord($SpyVents::dimensions, 0); %x++) {
+    for (%y = 0; %y < getWord($SpyVents::dimensions, 1); %y++) {
+      for (%z = 0; %z < getWord($SpyVents::dimensions, 2); %z++) {
+        if (%map[%x,%y,%z]) createCube(%g, Vector::add(%x*$SpyVents::blockSize @ " " @ %y*$SpyVents::blockSize @ " " @ %z*$SpyVents::blockSize, %pos), %map[%x-1,%y,%z], %map[%x+1, %y, %z], %map[%x, %y-1, %z], %map[%x, %y+1, %z], %map[%x, %y, %z-1], %map[%x, %y, %z+1]);
+      }
+    }
+  }
+
+  // Elevators
+
+  for (%z = 0; %z < getWord($SpyVents::dimensions, 2); %z++) {
+    for (%x = 0; %x < getWord($SpyVents::dimensions, 0); %x++) {
+      for (%y = 0; %y < getWord($SpyVents::dimensions, 1); %y++) {
+        if (%map[%x,%y,%z] && %map[%x,%y,%z+1] && %map[%x,%y,%z+2] && !%map[%x,%y,%z-1] && !(%map[%x,%y,%z] & 2)) {
+          for (%z2 = %z; %z2 < getWord($SpyVents::dimensions, 2); %z2++) {
+            %map[%x,%y,%z2] |= 2;
+            if (!%map[%x,%y,%z2+1]) break;
+          }
+
+          createElevator(Vector::add(Vector::add(Vector::mul(%x @ " " @ %y @ " " @ %z, $SpyVents::blockSize), %pos), "0 0 " @ (-$SpyVents::blockInteriorSize/2)),
+                         Vector::add(Vector::add(Vector::mul(%x @ " " @ %y @ " " @ %z2, $SpyVents::blockSize), %pos), "0 0 " @ (-$SpyVents::blockInteriorSize/2)));
+        }
+      }
+    }
+  }
+
+  // Random boxes
+
+  for (%x = 0; %x < getWord($SpyVents::dimensions, 0); %x++) {
+    for (%y = 0; %y < getWord($SpyVents::dimensions, 1); %y++) {
+      for (%z = 0; %z < getWord($SpyVents::dimensions, 2); %z++) {
+        if (getRandom() < $SpyVents::boxChance && %map[%x,%y,%z] && !%map[%x,%y,%z-1] && !(%map[%x,%y,%z] & 2)) {
+          %map[%x,%y,%z] |= 4;
+          createBoxes(Vector::add(Vector::add(Vector::mul(%x @ " " @ %y @ " " @ %z, $SpyVents::blockSize), %pos), "0 0 " @ (-$SpyVents::blockInteriorSize/2)));
+        }
+      }
+    }
+  }
+  
+  // Now for some spawn points
+
+  %n = 0;
+  for (%x = 0; %x < getWord($SpyVents::dimensions, 0); %x++) {
+    for (%y = 0; %y < getWord($SpyVents::dimensions, 1); %y++) {
+      for (%z = 0; %z < getWord($SpyVents::dimensions, 2); %z++) {
+        if (%map[%x,%y,%z] == 1) {
+          if (%map[%x,%y,%z-1]) continue;
+
+          if (%n < $SpyVents::numSpawnPoints) {
+            %spawns[%n] = %x @ " " @ %y @ " " @ %z;
+          } else {
+            %n2 = rand(0, %n);
+            if (%n2 < $SpyVents::numSpawnPoints) %spawns[%n2] = %x @ " " @ %y @ " " @ %z;
+          }
+          %n++;
+        }
+      }
+    }
+  }
+
+  for (%i = 0; %i < min($SpyVents::numSpawnPoints, %n); %i++) {
+    if (%spawns[%i] == "") break;
+    %spos = Vector::mul(%spawns[%i], $SpyVents::blockSize);
+    %spos = Vector::add(%spos, %pos);
+    %spos = Vector::add(%spos, "0 0 -1");
+    createSpawnPoint(%spos);
+  }
+
+  // Funky hack because Tribes elevators are retards
+  function q() {
+  addToSet(MissionGroup, %gen = newObject("", StaticShape, Generator, true));
+  GameBase::setPosition(%gen, "0 0 -19999");
+  }
+  schedule("q();", 5);
+}
+
+$SpyVents::wallCounter = 0;
+function createCube(%g, %pos, %wall0, %wall1, %wall2, %wall3, %wall4, %wall5) {
+  function floatingpadVars() {
+  %offset[0] = "-23 0 0";
+  %offset[1] = "23 0 0";
+  %offset[2] = "0 -23 0";
+  %offset[3] = "0 23 0";
+  %offset[4] = "0 0 -23";
+  %offset[5] = "0 0 23";
+
+  %rot[0] = "0 1.57 0";
+  %rot[1] = "0 -1.57 0";
+  %rot[2] = "-1.57 0 0";
+  %rot[3] = "1.57 0 0";
+  %rot[4] = "0 0 0";
+  %rot[5] = "3.14 0 0";
+  }
+
+  %offset[0] = "-4 0 -4";
+  %offset[1] = "4 0 -4";
+  %offset[2] = "0 -4 -4";
+  %offset[3] = "0 4 -4";
+  %offset[4] = "0 -4 -4";
+  %offset[5] = "0 4 4";
+
+  %rot[0] = "0 0 1.57";
+  %rot[1] = "0 0 -1.57";
+  %rot[2] = "0 0 3.14";
+  %rot[3] = "0 0 0";
+  %rot[4] = "-1.57 0 0";
+  %rot[5] = "1.57 0 0";
+
+  for (%i = 0; %i < 6; %i++) {
+    if (%wall[%i]) continue;
+//    instant InteriorShape "Wall"@($SpyVents::wallCounter++) {
+//      filename = "logo2.dis";
+//    };
+//    %x = nameToID("Wall"@$SpyVents::wallCounter);
+    %x = newObject("", InteriorShape, "logo2.dis", false);
+    GameBase::setPosition(%x, Vector::add(%pos, %offset[%i]));
+    GameBase::setRotation(%x, %rot[%i]);
+    addToSet(%g, %x);
+  }
+}
+
+function createSpawnPoint(%pos) {
+  %x = newObject("", Marker, DropPointMarker);
+  %x2 = newObject("", Marker, DropPointMarker);
+  GameBase::setPosition(%x, %pos);
+  GameBase::setPosition(%x2, %pos);
+  addToSet(nameToID("MissionGroup\\Teams\\team0\\DropPoints\\Start"), %x);
+  addToSet(nameToID("MissionGroup\\Teams\\team0\\DropPoints\\Random"), %x2);
+}
+
+function createElevatorQ(%p1, %p2) {
+  %eg = newObject("Elev", SimGroup);
+  %sp = newObject("Path", SimPath);
+  %m1 = newObject("", Marker, PathMarker);
+  %m2 = newObject("", Marker, PathMarker);
+
+  GameBase::setPosition(%m1, %p1);
+  GameBase::setPosition(%m2, %p2);
+
+  addToSet(MissionGroup, %eg);
+  addToSet(%eg, %sp);
+  addToSet(%sp, %m1);
+  addToSet(%sp, %m2);
+
+  %elev = newObject("", Moveable, elevator4x4);
+  %elev.loop = true;
+  addToSet(%eg, %elev);
+
+  GameBase::setActive(%elev, true);
+  Moveable::setWaypoint(%elev, 1);
+  Moveable::moveToWaypoint(%elev, 0);
+}
+
+$SpyVents::elevCounter = 0;
+function createElevator(%p1, %p2) {
+  %p1 = Vector::add(%p1, "0 0 -0.5");
+  %p2 = Vector::add(%p2, "0 0 -0.5");
+
+  instant SimGroup "Elev"@$SpyVents::elevCounter++ {
+	instant SimPath "Path" {
+		instant Marker "" {
+			datablock = "PathMarker";
+			position = %p1;
+			rotation = "0 0 0";
+		};
+		instant Marker "" {
+			datablock = "PathMarker";
+			position = %p2;
+			rotation = "0 0 0";
+		};
+	};
+	instant Moveable "Elev" {
+		datablock = elevator6x6;
+		loop = true;
+	};
+  };
+
+  %g = nameToID("Elev"@$SpyVents::elevCounter);
+
+  addToSet(MissionGroup, %g);
+
+  GameBase::setActive(nameToID(%g @ "\\Elev"), true);
+  Moveable::setWaypoint(nameToID(%g @ "\\Elev"), 1);
+  Moveable::moveToWaypoint(nameToID(%g @ "\\Elev"), 0);
+}
+
+function createBoxes(%pos) {
+  %xo = rand(-$SpyVents::blockInteriorSize/2+1.5, $SpyVents::blockInteriorSize/2-1.5);
+  %yo = rand(-$SpyVents::blockInteriorSize/2+1.5, $SpyVents::blockInteriorSize/2-1.5);
+
+  %pos1 = Vector::add(%pos, %xo @ " " @ %yo @ " 0");
+  %pos2 = Vector::add(%pos1, Vector::randomRotVec(0,0,0,0,0,2*$PI,1.5,1.5));
+  %pos3 = Vector::add(Vector::mul(Vector::add(%pos1, %pos2), 0.5), "0 0 1.25");
+
+  for (%i = 1; %i <= 3; %i++) {
+    %obj = newObject("", StaticShape, CargoCrate, true);
+    GameBase::setPosition(%obj, %pos[%i]);
+    GameBase::setRotation(%obj, "0 0 " @ rand(0,2*$PI));
+    addToSet(MissionGroup, %obj);
+  }
+}
+
+SpyVents::genMap("0 0 0");
