@@ -1,0 +1,457 @@
+instant SimGroup "MissionGroup" {
+	instant SimGroup "Volumes" {
+		instant SimVolume "InterfaceVol" {
+			fileName = "Interface.vol";
+		};
+		instant SimVolume "entities" {
+			fileName = "Entities.vol";
+		};
+		instant SimVolume "World" {
+			fileName = "lushWorld.vol";
+		};
+		instant SimVolume "WorldTerrain" {
+			fileName = "lushTerrain.vol";
+		};
+		instant SimVolume "lushDML" {
+			fileName = "lushDML.vol";
+		};
+		instant SimVolume "savanaDML" {
+			fileName = "savanaDML.vol";
+		};
+		instant SimVolume "human1DML" {
+			fileName = "human1DML.vol";
+		};
+		instant SimVolume "tedFile" {
+			fileName = "Raindance.ted";
+			locked = "true";
+		};
+	};
+	instant SimGroup "World" {
+		instant SimPalette "palette" {
+			fileName = "lush.night.ppl";
+		};
+		instant MissionCenterPos "MissionCenter" {
+			x = "-350";
+			y = "-350";
+			w = "700";
+			h = "700";
+		};
+	};
+	instant SimGroup "Landscape" {
+		instant StarField "stars" {
+			inFrontOfSky = "True";
+			colors[0] = "1 1 1";
+			colors[1] = "0.5 0.5 0.5";
+			colors[2] = "0.25 0.25 0.25";
+		};
+		instant Sky "Sky" {
+			dmlName = "";
+			skyColor = "0 0 0";
+			hazeColor = "0 0 0";
+			featurePosition = "0";
+			size = "600";
+			textures[0] = "0";
+			textures[1] = "1";
+			textures[2] = "2";
+			textures[3] = "3";
+			textures[4] = "4";
+			textures[5] = "5";
+			textures[6] = "6";
+			textures[7] = "7";
+			textures[8] = "8";
+			textures[9] = "9";
+			textures[10] = "10";
+			textures[11] = "11";
+			textures[12] = "12";
+			textures[13] = "13";
+			textures[14] = "14";
+			textures[15] = "15";
+		};
+		instant Planet "Sun" {
+			fileName = "";
+			azimuth = "0";
+			incidence = "60";
+			castShadows = "True";
+			useLensFlare = "False";
+			intensity = "0.699986 0.699986 0.699986";
+			ambient = "0.299986 0.299986 0.299986";
+			size = "2000";
+			distance = "11000";
+		};
+		instant SimTerrain "Terrain" {
+			tedFileName = "Raindance.dtf";
+			visibleDistance = "400";
+			hazeDistance = "250";
+			hazeVerticalMin = "9.88128e-39";
+			hazeVerticalMax = "8.10714e-39";
+			perspectiveDistance = "100";
+			screenSize = "61";
+			contGravity = "0 0 -20";
+			contDrag = "0";
+			contHeight = "10000";
+			position = "-768 -768 -1000";
+			rotation = "0 0 0";
+			terrainType = "flat";
+		};
+	};
+	instant SimGroup "Lights";
+	instant SimGroup "Teams" {
+		instant TeamGroup "team0" {
+			instant SimGroup "DropPoints" {
+				instant SimGroup "start";
+				instant SimGroup "random";
+			};
+		};
+	};
+};
+
+setSpawnBuyList($ITEM_SET_DM);
+
+exec(dm);
+$DMScoreLimit = 0;
+$Game::missionType = "DM";
+$cdTrack = 3;
+$cdPlayMode = 1;
+
+SpyPlatforms2::createMap(1, 20);
+
+
+
+
+
+
+
+
+
+
+
+function SpyPlatforms2::defaultParams() {
+$SpyPlatforms2::customParams = "";
+
+$SpyPlatforms2::gridDimension = 6;
+$SpyPlatforms2::layerHeight = 9;
+
+$SpyPlatforms2::gridXSize = 30;
+$SpyPlatforms2::gridYSize = 30;
+$SpyPlatforms2::gridZSize = 5;
+
+// Measured in cells
+$SpyPlatforms2::rampLength = 3;
+
+$SpyPlatforms2::globalOffset = "0 0 0";
+
+
+$SpyPlatforms2::numPlatformTypes = 3;
+
+$SpyPlatforms2::platformShape[0] = "BELfloatingPad.dis";
+$SpyPlatforms2::platformShape[1] = "BEMfloatingPad.dis";
+$SpyPlatforms2::platformShape[2] = "BESfloatingPad.dis";
+
+// Measured in cells
+$SpyPlatforms2::platformSize[0] = 8;
+$SpyPlatforms2::platformSize[1] = 4;
+$SpyPlatforms2::platformSize[2] = 2;
+
+$SpyPlatforms2::platformOffset[0] = "0 0 -17";
+$SpyPlatforms2::platformOffset[1] = "0 0 -17";
+$SpyPlatforms2::platformOffset[2] = "0 0 -18.5";
+
+$SpyPlatforms2::platformChance[0] = 0;
+$SpyPlatforms2::platformChance[1] = 0.1;
+$SpyPlatforms2::platformChance[2] = 0.8;
+
+$SpyPlatforms2::dirVec[0] = "1 0 0";
+$SpyPlatforms2::dirVec[1] = "0 1 0";
+$SpyPlatforms2::dirVec[2] = "-1 0 0";
+$SpyPlatforms2::dirVec[3] = "0 -1 0";
+}
+
+if (!$SpyPlatforms2::customParams) {
+  SpyPlatforms2::defaultParams();
+}
+
+
+// ------------------------------------------------------------------------------
+// --- CREATE PLATFORM NETWORK --------------------------------------------------
+// ------------------------------------------------------------------------------
+
+function SpyPlatforms2::createMap(%initType, %n) {
+  SpyPlatforms2::clearCells();
+
+  %centerPos = floor(($SpyPlatforms2::gridXSize-1)/2) @ " " @ floor(($SpyPlatforms2::gridYSize-1)/2) @ " " @ floor(($SpyPlatforms2::gridZSize-1)/2);
+
+  %set = newObject("Platforms", SimGroup);
+  addToSet(MissionGroup, %set);
+
+  SpyPlatforms2::createPlatform(%set, %centerPos, %initType);
+  SpyPlatforms2::createPlatforms(%set, %centerPos, %initType, %n);
+}
+
+// %n = number of platforms allowed yet in the chain
+function SpyPlatforms2::createPlatforms(%set, %pos, %type, %n) {
+  if (%n <= 0) return;
+
+  for (%dir = 0; %dir < 4; %dir++) {
+    %vec = $SpyPlatforms2::dirVec[%dir];
+    %offset = Vector::mul(%vec, $SpyPlatforms2::platformSize[%type]/2);
+
+    %plat = SpyPlatforms2::pickPlatformType(Vector::add(%pos, %offset), %vec);
+    if (%plat == -1) continue;
+
+    %newType = getWord(%plat, 0);
+    %newUp = getWord(%plat, 1);
+
+    %platOffset = Vector::mul(%vec, $SpyPlatforms2::rampLength + $SpyPlatforms2::platformSize[%newType]/2);
+    %platOffset = Vector::add(%platOffset, %offset);
+    if (%newUp) %platOffset = Vector::add(%platOffset, "0 0 1");
+    else        %platOffset = Vector::add(%platOffset, "0 0 -1");
+
+    %platPos = Vector::add(%pos, %platOffset);
+    %rampPos = Vector::add(%pos, %offset);
+
+    SpyPlatforms2::createRamp(%set, %rampPos, %dir, %newUp);
+    SpyPlatforms2::createPlatform(%set, %platPos, %newType);
+
+    SpyPlatforms2::createPlatforms(%set, %platPos, %newType, %n-1);
+  }
+}
+
+function SpyPlatforms2::pickPlatformType(%pos, %vec) {
+  for (%up = 0; %up <= 1; %up++) {
+    if (%up) {
+      if (!SpyPlatforms2::checkRampSpace(%pos, %vec)) continue;
+    } else {
+      %reversePos = Vector::add(%pos, Vector::mul(%vec, $SpyPlatforms2::rampLength));
+      %reversePos = Vector::add(%reversePos, "0 0 -1");
+      if (!SpyPlatforms2::checkRampSpace(%reversePos, Vector::neg(%vec))) continue;
+    }
+
+    for (%type = 0; %type < $SpyPlatforms2::numPlatformTypes; %type++) {
+      %testVec = Vector::mul(%vec, $SpyPlatforms2::rampLength + $SpyPlatforms2::platformSize[%type]/2);
+      %testPos = Vector::add(%pos, %testVec);
+
+      if (%up) %testPos = Vector::add(%testPos, "0 0 1");
+      else     %testPos = Vector::add(%testPos, "0 0 -1");
+
+      if (SpyPlatforms2::checkPlatformSpace(%testPos, %type)) %platformAvailable[%type, %up] = true;
+    }
+  }
+
+  echo("Evaluating chances...");
+  %rand = getRandom();
+  for (%up = 0; %up <= 1; %up++) {
+    for (%type = 0; %type < $SpyPlatforms2::numPlatformTypes; %type++) {
+      if (%platformAvailable[%type, %up]) {
+        %rand -= $SpyPlatforms2::platformChance[%type]/2;
+
+        if (%rand < 0) return %type @ " " @ %up;
+      }
+    }
+  }
+
+  return -1;
+}
+
+
+
+// ------------------------------------------------------------------------------
+// --- CREATE PLATFORM ---------------------------------------------------------
+// ------------------------------------------------------------------------------
+
+function SpyPlatforms2::createPlatform(%set, %pos, %type) {
+  %obj = newObject("", InteriorShape, $SpyPlatforms2::platformShape[%type]);
+  addToSet(%set, %obj);
+
+  %s = $SpyPlatforms2::gridDimension;
+  %h = $SpyPlatforms2::layerHeight;
+
+  %realPos = (getWord(%pos, 0) * %s) @ " " @ (getWord(%pos, 1) * %s) @ " " @ (getWord(%pos, 2) * %h);
+  %realPos = Vector::add(%realPos, $SpyPlatforms2::platformOffset[%type]);
+  %realPos = Vector::add(%realPos, $SpyPlatforms2::globalOffset);
+
+  GameBase::setPosition(%obj, %realPos);
+
+  if (!SpyPlatforms2::checkPlatformSpace(%pos, %type)) $OHNOES++;
+
+  SpyPlatforms2::claimPlatformCells(%pos, %type);
+
+  SpyPlatforms2::createSpawnPoint(Vector::sub(%realPos, $SpyPlatforms2::platformOffset[%type]));
+}
+
+function SpyPlatforms2::claimPlatformCells(%pos, %type) {
+  %x = getWord(%pos, 0);
+  %y = getWord(%pos, 1);
+  %z = getWord(%pos, 2);
+
+  %s = $SpyPlatforms2::platformSize[%type];
+
+  for (%row = %y - %s/2; %row < %y + %s/2; %row++) {
+    for (%col = %x - %s/2; %col < %x + %s/2; %col++) {
+      $SpyPlatforms2::cell[%col, %row, %z] = 1;
+    }
+  }
+
+  return true;
+}
+
+function SpyPlatforms2::checkPlatformSpace(%pos, %type) {
+  %x = getWord(%pos, 0);
+  %y = getWord(%pos, 1);
+  %z = getWord(%pos, 2);
+
+  %s = $SpyPlatforms2::platformSize[%type];
+
+  if (%x - %s/2 < 0 ||
+      %x + %s/2 > $SpyPlatforms2::gridXSize ||
+      %y - %s/2 < 0 ||
+      %y + %s/2 > $SpyPlatforms2::gridYSize || 
+      %z < 0 ||
+      %z > $SpyPlatforms2::gridZSize) return false;
+
+  for (%row = %y - %s/2; %row < %y + %s/2; %row++) {
+    for (%col = %x - %s/2; %col < %x + %s/2; %col++) {
+      if ($SpyPlatforms2::cell[%col, %row, %z]) { echo("INTERSECTION"); return false; }
+    }
+  }
+
+  return true;
+}
+
+function SpyPlatforms2::createSpawnPoint(%pos) {
+  %marker = newObject("", Marker, DropPointMarker);
+  GameBase::setPosition(%marker, %pos);
+
+  addToSet(nameToID("MissionGroup\\Teams\\team0\\DropPoints\\Start"), %marker);
+  addToSet(nameToID("MissionGroup\\Teams\\team0\\DropPoints\\Random"), %marker);
+}
+
+
+
+// ------------------------------------------------------------------------------
+// --- CREATE RAMP --------------------------------------------------------------
+// ------------------------------------------------------------------------------
+
+function SpyPlatforms2::createRamp(%set, %pos, %dir, %up) {
+  %obj = newObject("", InteriorShape, "lookout2.dis");
+  addToSet(%set, %obj);
+
+  %vec = $SpyPlatforms2::dirVec[%dir];
+
+  if (!%up) {
+    %pos = Vector::add(%pos, Vector::mul(%vec, $SpyPlatforms2::rampLength));
+    %pos = Vector::add(%pos, "0 0 -1");
+    %dir = (%dir + 2)%4;
+    %vec = $SpyPlatforms2::dirVec[%dir];
+  }
+
+  %rot = Vector::mul("0 0 " @ ($PI/2), %dir);
+
+  %s = $SpyPlatforms2::gridDimension;
+  %h = $SpyPlatforms2::layerHeight;
+
+  %realPos = (getWord(%pos, 0) * %s) @ " " @ (getWord(%pos, 1) * %s) @ " " @ (getWord(%pos, 2) * %h);
+  %realPos = Vector::add(%realPos, Vector::mul(%vec, -2));
+  %realPos = Vector::add(%realPos, $SpyPlatforms2::platformOffset[%type]);
+  %realPos = Vector::add(%realPos, "0 0 -0.05"); // To avoid z-fighting
+  %realPos = Vector::add(%realPos, $SpyPlatforms2::globalOffset);
+
+  GameBase::setPosition(%obj, %realPos);
+  GameBase::setRotation(%obj, %rot);
+
+  if (!SpyPlatforms2::checkRampSpace(%pos, %vec)) $OHNOES++;
+
+  SpyPlatforms2::claimRampCells(%pos, %vec);
+}
+
+function SpyPlatforms2::claimRampCells(%pos, %dir) {
+  %x = getWord(%pos, 0);
+  %y = getWord(%pos, 1);
+  %z = getWord(%pos, 2);
+
+  %dx = getWord(%dir, 0);
+  %dy = getWord(%dir, 1);
+
+  if (%dx < 0) %x--;
+  if (%dy < 0) %y--;
+
+  %dx2 = tern(%dy != 0, -1, 0);
+  %dy2 = tern(%dx != 0, -1, 0);
+
+  $SpyPlatforms2::cell[%x      , %y      , %z] = 2;
+  $SpyPlatforms2::cell[%x+%dx  , %y+%dy  , %z] = 2;
+  $SpyPlatforms2::cell[%x+%dx  , %y+%dy  , %z+1] = 2;
+  $SpyPlatforms2::cell[%x+2*%dx, %y+2*%dy, %z+1] = 2;
+
+  $SpyPlatforms2::cell[%x+%dx2      , %y+%dy2      , %z] = 2;
+  $SpyPlatforms2::cell[%x+%dx+%dx2  , %y+%dy+%dy2  , %z] = 2;
+  $SpyPlatforms2::cell[%x+%dx+%dx2  , %y+%dy+%dy2  , %z+1] = 2;
+  $SpyPlatforms2::cell[%x+2*%dx+%dx2, %y+2*%dy+%dy2, %z+1] = 2;
+}
+
+function SpyPlatforms2::checkRampSpace(%pos, %dir) {
+  %x = getWord(%pos, 0);
+  %y = getWord(%pos, 1);
+  %z = getWord(%pos, 2);
+
+  %dx = getWord(%dir, 0);
+  %dy = getWord(%dir, 1);
+
+  if (%dx < 0) %x--;
+  if (%dy < 0) %y--;
+
+  %dx2 = tern(%dy != 0, -1, 0);
+  %dy2 = tern(%dx != 0, -1, 0);
+
+  return !($SpyPlatforms2::cell[%x      , %y      , %z] ||
+           $SpyPlatforms2::cell[%x+%dx  , %y+%dy  , %z] ||
+           $SpyPlatforms2::cell[%x+%dx  , %y+%dy  , %z+1] ||
+           $SpyPlatforms2::cell[%x+2*%dx, %y+2*%dy, %z+1] ||
+           $SpyPlatforms2::cell[%x+%dx2      , %y+%dy2      , %z] ||
+           $SpyPlatforms2::cell[%x+%dx+%dx2  , %y+%dy+%dy2  , %z] ||
+           $SpyPlatforms2::cell[%x+%dx+%dx2  , %y+%dy+%dy2  , %z+1] ||
+           $SpyPlatforms2::cell[%x+2*%dx+%dx2, %y+2*%dy+%dy2, %z+1]);
+}
+
+
+
+// ------------------------------------------------------------------------------
+// --- UTILITY/TESTING FUNCTONS -------------------------------------------------
+// ------------------------------------------------------------------------------
+
+function SpyPlatforms2::clearCells() {
+  deleteVariables("$SpyPlatforms2::cell*");
+}
+
+// KEY:
+// .: nothing
+// P: platform
+// U: ramp
+function SpyPlatforms2::output() {
+  for (%layer = 0; %layer < $SpyPlatforms2::gridZSize; %layer++) {
+    echo("");
+    echo("LAYER" @ %layer);
+    for (%row = $SpyPlatforms2::gridYSize-1; %row >= 0; %row--) {
+      %s = "";
+      for (%col = 0; %col < $SpyPlatforms2::gridXSize; %col++) {
+        %c = $SpyPlatforms2::cell[%col, %row, %layer];
+        if (%c == 1) %s = %s @ "X";
+        else if (%c == 2) %s = %s @ "O";
+        else %s = %s @ "_.";
+      }
+      echo(%s);
+    }
+    echo("");
+  }
+}
+
+function SpyPlatforms2::test() {
+  focusServer();
+  SpyPlatforms2::clearCells();
+
+  $DASET = newObject("", SimGroup);
+  addToSet(MissionCleanup, $DASET);
+
+  SpyPlatforms2::createPlatform($DASET, "30 30 2", 2);
+  SpyPlatforms2::createPlatforms($DASET, "30 30 2", 2, 40);
+  focusClient();
+}

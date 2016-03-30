@@ -1,0 +1,118 @@
+$SpyChangeup::numMissions = 4;
+
+$SpyChangeup::mission[0] = "Spy2";
+$SpyChangeup::missionSpawnset[0] = $ITEM_SET_DM;
+$SpyChangeup::missionTime[0] = 15;
+
+$SpyChangeup::mission[1] = "SpyNinjaHouse";
+$SpyChangeup::missionSpawnset[1] = $ITEM_SET_DM;
+$SpyChangeup::missionTime[1] = 15;
+
+$SpyChangeup::mission[2] = "SpyCity";
+$SpyChangeup::missionSpawnset[2] = $ITEM_SET_DM;
+$SpyChangeup::missionTime[2] = 15;
+
+$SpyChangeup::mission[3] = "SpyNinjaHouse";
+$SpyChangeup::missionSpawnset[3] = $ITEM_SET_DM;
+$SpyChangeup::missionTime[3] = 15;
+
+function remoteCGADone(%playerId) {
+     if (String::ICompare($missionName, "SpyChangeup") == 0) {
+       Client::setGuiMode(%playerId, $GuiModePlay);
+     }
+
+   if(!%playerId.ghostDoneFlag || !$ghosting) {
+      return;
+   }
+
+   %playerId.ghostDoneFlag = "";
+
+   Game::initialMissionDrop(%playerid);
+
+	if ($cdTrack != "")
+		remoteEval (%playerId, setMusic, $cdTrack, $cdPlayMode);
+   remoteEval(%playerId, MInfo, $missionName);
+}
+
+function SpyChangeup::loadMission(%num) {
+  echo("Loading " @ $SpyChangeup::mission[%num]);
+
+  newObject(PlayerSetTemp, SimSet);
+  for (%c = Client::getFirst(); %c != -1; %c = Client::getNext(%c)) {
+    Client::setGuiMode(%c, $GuiModeCommand);
+    remoteEval(%c, missionChangeNotify, "SpyChangeup." @ $SpyChangeup::mission[%num]);
+
+    %player = Client::getOwnedObject(%c);
+
+    addToSet(PlayerSetTemp, %player);
+    removeFromSet(MissionCleanup, %player);
+
+    if (%player.grappling) Grappler::ungrapple(%player);
+  }
+  deleteObject(MissionCleanup);
+
+  deleteObject(ConsoleScheduler);
+  newObject(ConsoleScheduler, SimConsoleScheduler);
+
+  deleteObject(MissionGroup);
+  resetPlayerManager();
+  resetGhostManagers();
+
+  setInstantGroup(0);
+  exec("missions\\SpyChangeup." @ $SpyChangeup::mission[%num] @ ".mis");
+
+  newObject(MissionCleanup, SimGroup);
+  while (Group::objectCount(PlayerSetTemp) > 0) {
+    %player = Group::getObject(PlayerSetTemp, 0);
+    addToSet(MissionCleanup, %player);
+    removeFromSet(PlayerSetTemp, %player);
+  }
+  deleteObject(PlayerSetTemp);
+
+  addToSet(MissionCleanup, newObject("team0", TeamGroup));
+
+  for (%c = Client::getFirst(); %c != -1; %c = Client::getNext(%c)) {
+    if (Client::getControlObject(%c) == Client::getObserverCamera(%c)) {
+      if (%c.observerMode == "observerFly") {
+        %camSpawn = Game::pickObserverSpawn(%c);
+        Observer::setFlyMode(%c, GameBase::getPosition(%camSpawn), 
+                             GameBase::getRotation(%camSpawn), true, true);
+
+      }
+    } else {
+      %marker = Game::pickRandomSpawn(0);
+
+      if (%marker) GameBase::setPosition(%c, GameBase::getPosition(%marker));
+      else {
+        Observer::enterObserverMode(%c);
+        Client::sendMessage(%c, 1, "Could not find a spawn point; change teams to rejoin.");
+      }
+    }
+
+    Player::setDamageFlash(%c, 1.0);
+    Client::getOwnedObject(%c).invinc = true;
+    schedule(Client::getOwnedObject(%c) @ ".invinc = \"\"; Player::setDamageFlash("@%c@", 0.0);", 0.5);
+
+    startGhosting(%c);
+  }
+
+  purgeResources(true);
+}
+
+function SpyChangeup::changeMission() {
+  %mis = floor(getRandom() * $SpyChangeup::numMissions);
+
+  SpyChangeup::loadMission(%mis);
+
+  setSpawnBuyList($SpyChangeup::missionSpawnset[%mis]);
+  schedule("SpyChangeup::changeMission();", $SpyChangeup::missionTime[%mis]);
+}
+
+$Mission::extraInfo = "<F4>SpyChangeup: the only thing harder than keeping up with your opponent on this map, is keeping up with the map itself...";
+
+exec(dm);
+$Game::missionType = "DM";
+$cdTrack = 3;
+$cdPlayMode = 1;
+
+SpyChangeup::changeMission();

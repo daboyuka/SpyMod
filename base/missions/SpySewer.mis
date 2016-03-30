@@ -1,0 +1,132 @@
+//--- export object begin ---//
+instant SimGroup "MissionGroup" {
+	instant SimGroup "Volumes" {
+		instant SimVolume "InterfaceVol" {
+			fileName = "Interface.vol";
+		};
+		instant SimVolume "entities" {
+			fileName = "Entities.vol";
+		};
+		instant SimVolume "World" {
+			fileName = "desertWorld.vol";
+		};
+		instant SimVolume "WorldTerrain" {
+			fileName = "desertTerrain.vol";
+		};
+		instant SimVolume "desertDML" {
+			fileName = "desertDML.vol";
+		};
+		instant SimVolume "savanaDML" {
+			fileName = "savanaDML.vol";
+		};
+		instant SimVolume "human1DML" {
+			fileName = "human1DML.vol";
+		};
+		instant SimVolume "TedFile" {
+			fileName = "5_CTF.ted";
+		};
+	};
+	instant SimGroup "World" {
+		instant SimPalette "Palette" {
+			fileName = "desert.night.ppl";
+		};
+		instant MissionCenterPos "MissionCenter" {
+			x = "-1350";
+			y = "-258";
+			w = "600";
+			h = "400";
+		};
+	};
+	instant SimGroup "Landscape" {
+		instant Sky "Sky" {
+			dmlName = "";
+			skyColor = "0 0 0";
+			hazeColor = "0 0 0";
+			featurePosition = "0";
+			size = "700";
+			textures[0] = "1";
+			textures[1] = "2";
+			textures[2] = "3";
+			textures[3] = "4";
+			textures[4] = "5";
+			textures[5] = "6";
+			textures[6] = "7";
+			textures[7] = "8";
+			textures[8] = "9";
+			textures[9] = "10";
+			textures[10] = "11";
+			textures[11] = "12";
+			textures[12] = "13";
+			textures[13] = "14";
+			textures[14] = "15";
+			textures[15] = "0";
+			distance = "800";
+		};
+		instant Planet "Sun" {
+			fileName = "";
+			azimuth = "60";
+			incidence = "55";
+			castShadows = "True";
+			useLensFlare = "False";
+			intensity = "0 0 0";
+			ambient = "0 0 0";
+			size = "180";
+			distance = "1200";
+		};
+		instant SimTerrain "Terrain" {
+			tedFileName = "5_CTF.dtf";
+			visibleDistance = "500";
+			hazeDistance = "400";
+			hazeVerticalMin = "-NAN";
+			hazeVerticalMax = "1.43119e-38";
+			perspectiveDistance = "100";
+			screenSize = "48";
+			contGravity = "0 0 -20";
+			contDrag = "0";
+			contHeight = "10000";
+			position = "-3072 -3072 0";
+			rotation = "0 0 0";
+		};
+	};
+	instant SimGroup "Lights";
+	instant SimGroup "Teams" {
+		instant TeamGroup "team0" {
+			instant SimGroup "DropPoints" {
+				instant SimGroup "Start";
+				instant SimGroup "Random";
+			};
+		};
+	};
+	instant SimGroup "ObserverDropPoints";
+	instant InteriorShape "bunker61" {
+		fileName = "bunker6.dis";
+		isContainer = "0";
+		position = "-29.3587 7.60568 116.327";
+		rotation = "0 0 0";
+		lightParams = "-0.1 ";
+	};
+		instant StaticShape "Generator1" {
+			dataBlock = "Generator";
+			name = "";
+			position = "-33.7183 5.16044 124.327";
+			rotation = "0 0 0";
+			destroyable = "True";
+			deleteOnDestroy = "False";
+		};
+	instant StaticShape "Generator1" {
+		dataBlock = "Generator";
+		name = "";
+		position = "-38.0048 -16.7834 118.919";
+		rotation = "0 0 0";
+		destroyable = "True";
+		deleteOnDestroy = "False";
+	};
+};
+//--- export object end ---//
+setSpawnBuyList($ITEM_SET_ALL);
+
+exec(dm);
+$DMScoreLimit = 0;
+$Game::missionType = "DM";
+$cdTrack = 8;
+$cdPlayMode = 1;

@@ -1,0 +1,495 @@
+//--- export object begin ---//
+instant SimGroup "MissionGroup" {
+	instant SimGroup "Volumes" {
+		instant SimVolume "InterfaceVol" {
+			fileName = "Interface.vol";
+		};
+		instant SimVolume "entities" {
+			fileName = "Entities.vol";
+		};
+		instant SimVolume "World" {
+			fileName = "lushWorld.vol";
+		};
+		instant SimVolume "WorldTerrain" {
+			fileName = "lushTerrain.vol";
+		};
+		instant SimVolume "lushDML" {
+			fileName = "lushDML.vol";
+		};
+		instant SimVolume "savanaDML" {
+			fileName = "savanaDML.vol";
+		};
+		instant SimVolume "human1DML" {
+			fileName = "human1DML.vol";
+		};
+		instant SimVolume "tedFile" {
+			fileName = "Raindance.ted";
+			locked = "true";
+		};
+	};
+	instant SimGroup "World" {
+		instant SimPalette "palette" {
+			fileName = "lush.night.ppl";
+		};
+		instant MissionCenterPos "MissionCenter" {
+			x = "-410";
+			y = "-410";
+			w = "820";
+			h = "820";
+		};
+	};
+	instant SimGroup "Landscape" {
+		instant StarField "stars" {
+			inFrontOfSky = "True";
+			colors[0] = "1 1 1";
+			colors[1] = "0.5 0.5 0.5";
+			colors[2] = "0.25 0.25 0.25";
+		};
+		instant Sky "Sky" {
+			dmlName = "";
+			skyColor = "0 0 0";
+			hazeColor = "0 0 0";
+			featurePosition = "0";
+			size = "600";
+			textures[0] = "0";
+			textures[1] = "1";
+			textures[2] = "2";
+			textures[3] = "3";
+			textures[4] = "4";
+			textures[5] = "5";
+			textures[6] = "6";
+			textures[7] = "7";
+			textures[8] = "8";
+			textures[9] = "9";
+			textures[10] = "10";
+			textures[11] = "11";
+			textures[12] = "12";
+			textures[13] = "13";
+			textures[14] = "14";
+			textures[15] = "15";
+		};
+		instant Planet "Sun" {
+			fileName = "";
+			azimuth = "0";
+			incidence = "60";
+			castShadows = "True";
+			useLensFlare = "False";
+			intensity = "0.699986 0.699986 0.699986";
+			ambient = "0.299986 0.299986 0.299986";
+			size = "2000";
+			distance = "11000";
+		};
+		instant SimTerrain "Terrain" {
+			tedFileName = "Raindance.dtf";
+			visibleDistance = "1000";
+			hazeDistance = "800";
+			hazeVerticalMin = "9.88128e-39";
+			hazeVerticalMax = "8.10714e-39";
+			perspectiveDistance = "100";
+			screenSize = "61";
+			contGravity = "0 0 -20";
+			contDrag = "0";
+			contHeight = "10000";
+			position = "-768 -768 0";
+			rotation = "0 0 0";
+			terrainType = "flat";
+		};
+	};
+	instant SimGroup "Lights";
+	instant SimGroup "Teams" {
+		instant TeamGroup "team0" {
+			instant SimGroup "DropPoints" {
+				instant SimGroup "start" {
+					instant Marker "Drop Point1" {
+						dataBlock = "DropPointMarker";
+						name = "";
+						position = "-12 12 2104";
+						rotation = "0 0 0";
+					};
+					instant Marker "Drop Point1" {
+						dataBlock = "DropPointMarker";
+						name = "";
+						position = "-12 -12 2104";
+						rotation = "0 0 0";
+					};
+					instant Marker "Drop Point1" {
+						dataBlock = "DropPointMarker";
+						name = "";
+						position = "12 -12 2104";
+						rotation = "0 0 0";
+					};
+					instant Marker "Drop Point1" {
+						dataBlock = "DropPointMarker";
+						name = "";
+						position = "12 12 2104";
+						rotation = "0 0 0";
+					};
+				};
+				instant SimGroup "Random" {
+					instant Marker "Drop Point1" {
+						dataBlock = "DropPointMarker";
+						name = "";
+						position = "12 12 2104";
+						rotation = "0 0 0";
+					};
+					instant Marker "Drop Point1" {
+						dataBlock = "DropPointMarker";
+						name = "";
+						position = "12 -12 2104";
+						rotation = "0 0 0";
+					};
+					instant Marker "Drop Point1" {
+						dataBlock = "DropPointMarker";
+						name = "";
+						position = "-12 -12 2104";
+						rotation = "0 0 0";
+					};
+					instant Marker "Drop Point1" {
+						dataBlock = "DropPointMarker";
+						name = "";
+						position = "-12 12 2104";
+						rotation = "0 0 0";
+					};
+				};
+			};
+			instant InteriorShape "iblock1" {
+				fileName = "iblock.dis";
+				isContainer = "1";
+				position = "0 0 2100";
+				rotation = "0 0 0";
+				lightParams = "0 ";
+			};
+			instant InteriorShape "iblock1" {
+				fileName = "iblock.dis";
+				isContainer = "1";
+				position = "0 0 2172";
+				rotation = "0 0 0";
+				lightParams = "0 ";
+			};
+			instant InteriorShape "iblock1" {
+				fileName = "iblock.dis";
+				isContainer = "1";
+				position = "36 0 2136";
+				rotation = "0 1.57077 0";
+				lightParams = "0 ";
+			};
+			instant InteriorShape "iblock1" {
+				fileName = "iblock.dis";
+				isContainer = "1";
+				position = "-36 0 2136";
+				rotation = "0 1.57077 0";
+				lightParams = "0 ";
+			};
+			instant InteriorShape "iblock1" {
+				fileName = "iblock.dis";
+				isContainer = "1";
+				position = "0 36 2152";
+				rotation = "1.5701 0 0";
+				lightParams = "0 ";
+			};
+			instant InteriorShape "iblock1" {
+				fileName = "iblock.dis";
+				isContainer = "1";
+				position = "0 -36 2136";
+				rotation = "1.57002 0 0";
+				lightParams = "0 ";
+			};
+			instant InteriorShape "iblock1" {
+				fileName = "iblock.dis";
+				isContainer = "1";
+				position = "48 36 2136";
+				rotation = "1.5701 0 0";
+				lightParams = "0 ";
+			};
+			instant InteriorShape "iblock1" {
+				fileName = "iblock.dis";
+				isContainer = "1";
+				position = "-48 36 2136";
+				rotation = "1.5701 0 0";
+				lightParams = "0 ";
+			};
+			instant InteriorShape "iblock1" {
+				fileName = "iblock.dis";
+				isContainer = "1";
+				position = "0 36 2072";
+				rotation = "1.5703 0 0";
+				lightParams = "0 ";
+			};
+			instant Trigger "TELE" {
+				dataBlock = "ScriptTrigger";
+				name = "";
+				position = "0 40 2112";
+				rotation = "0 0 0";
+				boundingBox = "-16 -4 -8 16 4 8";
+				isSphere = "False";
+				enterFunction = "SpyAirBattle::tele";
+			};
+			instant Trigger "INVINCAGE" {
+				dataBlock = "ScriptTrigger";
+				name = "";
+				position = "0 0 2132";
+				rotation = "0 0 0";
+				boundingBox = "-32 -34 -32 32 34 32";
+				isSphere = "False";
+				enterFunction = "SpyAirBattle::invinc";
+				leaveFunction = "SpyAirBattle::uninvinc";
+			};
+			instant Marker "Marker1" {
+				dataBlock = "VehicleRespawnMarker";
+				name = "";
+				position = "24 -24 2105";
+				rotation = "0 0 0";
+				lastVehicle = "8308";
+				TEAM = "0";
+				vehicleType = "SpyScout";
+				respawnTime = "20";
+				enabled = "true";
+				noMultipleVehicles = "false";
+			};
+			instant Marker "Marker1" {
+				dataBlock = "VehicleRespawnMarker";
+				name = "";
+				position = "24 24 2105";
+				rotation = "0 0 0";
+				lastVehicle = "8309";
+				TEAM = "0";
+				vehicleType = "SpyScout";
+				respawnTime = "20";
+				enabled = "true";
+				noMultipleVehicles = "false";
+			};
+			instant Marker "Marker1" {
+				dataBlock = "VehicleRespawnMarker";
+				name = "";
+				position = "0 -24 2105";
+				rotation = "0 0 0";
+				lastVehicle = "8347";
+				TEAM = "0";
+				vehicleType = "SpyScout";
+				respawnTime = "20";
+				enabled = "true";
+				noMultipleVehicles = "false";
+			};
+			instant Marker "Marker1" {
+				dataBlock = "VehicleRespawnMarker";
+				name = "";
+				position = "0 24 2105";
+				rotation = "0 0 0";
+				lastVehicle = "8302";
+				TEAM = "0";
+				vehicleType = "SpyScout";
+				respawnTime = "20";
+				enabled = "true";
+				noMultipleVehicles = "false";
+			};
+			instant Marker "Marker1" {
+				dataBlock = "VehicleRespawnMarker";
+				name = "";
+				position = "-24 0 2105";
+				rotation = "0 0 0";
+				lastVehicle = "8303";
+				TEAM = "0";
+				vehicleType = "SpyScout";
+				respawnTime = "20";
+				enabled = "true";
+				noMultipleVehicles = "false";
+			};
+			instant Marker "Marker1" {
+				dataBlock = "VehicleRespawnMarker";
+				name = "";
+				position = "24 0 2105";
+				rotation = "0 0 0";
+				lastVehicle = "8304";
+				TEAM = "0";
+				vehicleType = "SpyScout";
+				respawnTime = "20";
+				enabled = "true";
+				noMultipleVehicles = "false";
+			};
+			instant Marker "Marker1" {
+				dataBlock = "VehicleRespawnMarker";
+				name = "";
+				position = "0 0 2105";
+				rotation = "0 0 0";
+				lastVehicle = "8305";
+				TEAM = "0";
+				vehicleType = "SpyScout";
+				respawnTime = "20";
+				enabled = "true";
+				noMultipleVehicles = "false";
+			};
+			instant Marker "Marker1" {
+				dataBlock = "VehicleRespawnMarker";
+				name = "";
+				position = "-24 24 2105";
+				rotation = "0 0 0";
+				lastVehicle = "8306";
+				TEAM = "0";
+				vehicleType = "SpyScout";
+				respawnTime = "20";
+				enabled = "true";
+				noMultipleVehicles = "false";
+			};
+			instant Marker "Marker1" {
+				dataBlock = "VehicleRespawnMarker";
+				name = "";
+				position = "-24 -24 2105";
+				rotation = "0 0 0";
+				lastVehicle = "8307";
+				TEAM = "0";
+				vehicleType = "SpyScout";
+				respawnTime = "20";
+				enabled = "true";
+				noMultipleVehicles = "false";
+			};
+			instant StaticShape "Generator" {
+				dataBlock = "Generator";
+				name = "";
+				position = "-1000 0 -8000";
+				rotation = "0 0 0";
+				destroyable = "True";
+				deleteOnDestroy = "False";
+			};
+		};
+	};
+	instant SimGroup "Ground" {
+		instant Trigger "BOUNDS" {
+			dataBlock = "ScriptTrigger";
+			name = "";
+			position = "0 0 200";
+			rotation = "0 0 0";
+			boundingBox = "-400 -400 -200 400 400 200";
+			isSphere = "False";
+			leaveFunction = "SpyAirBattle::bounds";
+		};
+		instant StaticShape "DiscoEmitter1" {
+			dataBlock = "DiscoEmitter";
+			name = "";
+			position = "400 -400 400";
+			rotation = "0 0 0";
+			destroyable = "True";
+			deleteOnDestroy = "False";
+			laserRate = "2.5";
+			maxRot = "0 0 0";
+			minRot = "0 0 0";
+		};
+		instant StaticShape "DiscoEmitter1" {
+			dataBlock = "DiscoEmitter";
+			name = "";
+			position = "-400 400 400";
+			rotation = "0 -0 -3.13997";
+			destroyable = "True";
+			deleteOnDestroy = "False";
+			laserRate = "2.5";
+			maxRot = "0 0 -3.14";
+			minRot = "0 0 -3.14";
+		};
+		instant StaticShape "DiscoEmitter1" {
+			dataBlock = "DiscoEmitter";
+			name = "";
+			position = "-400 -400 400";
+			rotation = "0 -0 -1.56997";
+			destroyable = "True";
+			deleteOnDestroy = "False";
+			laserRate = "2.5";
+			maxRot = "0 0 -1.57";
+			minRot = "0 0 -1.57";
+		};
+		instant StaticShape "DiscoEmitter1" {
+			dataBlock = "DiscoEmitter";
+			name = "";
+			position = "400 400 400";
+			rotation = "0 -0 1.56997";
+			destroyable = "True";
+			deleteOnDestroy = "False";
+			laserRate = "2.5";
+			maxRot = "0 0 1.57";
+			minRot = "0 0 1.57";
+		};
+		instant StaticShape "DiscoEmitterDown" {
+			dataBlock = "DiscoEmitter";
+			name = "";
+			position = "-400 -400 400";
+			rotation = "-1.56981 0 0";
+			destroyable = "True";
+			deleteOnDestroy = "False";
+			laserRate = "2.5";
+			maxRot = "-1.57 0 0";
+			minRot = "-1.57 0 0";
+		};
+		instant StaticShape "DiscoEmitterDown" {
+			dataBlock = "DiscoEmitter";
+			name = "";
+			position = "-400 400 400";
+			rotation = "-1.56981 0 0";
+			destroyable = "True";
+			deleteOnDestroy = "False";
+			laserRate = "2.5";
+			maxRot = "-1.57 0 0";
+			minRot = "-1.57 0 0";
+		};
+		instant StaticShape "DiscoEmitterDown" {
+			dataBlock = "DiscoEmitter";
+			name = "";
+			position = "400 -400 400";
+			rotation = "-1.56981 0 0";
+			destroyable = "True";
+			deleteOnDestroy = "False";
+			laserRate = "2.5";
+			maxRot = "-1.57 0 0";
+			minRot = "-1.57 0 0";
+		};
+		instant StaticShape "DiscoEmitterDown" {
+			dataBlock = "DiscoEmitter";
+			name = "";
+			position = "400 400 400";
+			rotation = "-1.56981 0 0";
+			destroyable = "True";
+			deleteOnDestroy = "False";
+			laserRate = "2.5";
+			maxRot = "-1.57 0 0";
+			minRot = "-1.57 0 0";
+		};
+	};
+};
+//--- export object end ---//
+
+function SpyAirBattle::invinc(%this, %object) {
+  if (getObjectType(%object) != "Player" && getObjectType(%object) != "Flier") return;
+
+  %object.invinc = true;
+}
+
+function SpyAirBattle::uninvinc(%this, %object) {
+  if (getObjectType(%object) != "Player" && getObjectType(%object) != "Flier") return;
+
+  %object.invinc = false;
+}
+
+function SpyAirBattle::bounds(%this, %object) {
+  %pos = GameBase::getPosition(%object);
+  %posX = getWord(%pos, 0);
+  %posY = getWord(%pos, 1);
+  %posZ = getWord(%pos, 2);
+  if (%posX < -400) %posX = -400;
+  if (%posX > 400) %posX = 400;
+  if (%posY < -400) %posY = -400;
+  if (%posY > 400) %posY = 400;
+  if (%posZ < 0) %posZ = 0;
+  if (%posZ > 400) %posZ = 400;
+
+  GameBase::setPosition(%object, %posX @ " " @ %posY @ " " @ %posZ);
+}
+
+function SpyAirBattle::tele(%this, %object) {
+  if (%object.grappling) Grappler::ungrapple(%object);
+  GameBase::setPosition(%object, Vector::randomVec2("-350 -350 100", "350 350 350"));
+}
+
+setSpawnBuyList($ITEM_SET_ALL);
+
+$teamScoreLimit = 10;
+exec(objectives);
+$Game::missionType = "CTF";
+$cdTrack = 3;
+$cdPlayMode = 1;
