@@ -26,10 +26,19 @@ function tern(%v, %a, %b) {
   else    return %b;
 }
 
+function defval(%v, %def) {
+	if (%v == "") return %def;
+	else          return %v;
+}
+
 function gint(%x) {
   %f = floor(%x);
   if (%x >= 0 || %x == %f) return %f;
   else return %f - 1;
+}
+
+function randint(%n) {
+	return floor(getRandom() * %n);
 }
 
 $TaylorSeries = true;
@@ -233,6 +242,15 @@ function String::escapeGood(%str) {
   }
   %str = String::replace(%str, "~~~~~~", "\\x");
   return %str;
+}
+
+function String::splitAfter(%str, %c) {
+	%idx = String::findSubStr(%str, %c);
+	if (%idx == -1) {
+		return "";
+	} else {
+		return String::getSubStr(%str, %idx+1, 10240);
+	}	
 }
 
 function char(%str) { return String::ICompare(String::getSubStr(%str,0,1), "\x00"); }
