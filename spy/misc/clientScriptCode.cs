@@ -25,11 +25,11 @@ function remoteIAmUsingSpyModClientScript(%client, %version) {
 
 function remoteUploadPassword(%client, %password) {
   %right = Admin::tryLogin(%client, %password);
-  if (%right > 0) {
+  if (%right >= 0) {
     bottomprint(%client, "<jc><f1>Your password has been received and accepted");
-  } else if (%right == 0) {
-    bottomprint(%client, "<jc><f1>Your password has been received, but was incorrect");
   } else if (%right == -1) {
+    bottomprint(%client, "<jc><f1>Your password has been received, but was incorrect");
+  } else if (%right == -2) {
     return;
   }
 }

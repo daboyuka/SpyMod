@@ -86,9 +86,9 @@ function Admin::generatePassword() {
 }
 
 // returns:
-//   >0: successful (returns database index)
-//   0: wrong password
-//  -1: kicked for wrong password
+//   >=0: successful (returns database index)
+//   -1: wrong password
+//   -2: kicked for wrong password
 function Admin::tryLogin(%clientId, %password) {
 //  %index = PlayerDatabase::findClientPlayer(%clientId);
   %index = %clientId.databaseIndex;
@@ -106,23 +106,25 @@ function Admin::tryLogin(%clientId, %password) {
     %clientId.wrongPasswords++;
     if (%clientId.wrongPasswords >= 3) {
       schedule("Net::kick("@%clientId@", \"Too many incorrect passwords\");",0);
-      return -1;
-    } else return 0;
+      return -2;
+    } else {
+	  return -1;
+	}
   }
 }
 
 function Admin::checkPassword(%clientId, %password) {
   %right = Admin::tryLogin(%clientId, %password);
 
-  if (%right > 0) {
+  if (%right >= 0) {
     Client::sendMessage(%clientId, 1, "Password accepted (your chat is now unblocked)");
     if (%clientId.usingClientScript) {
       SpyModClientScript::downloadPassword(%clientId, %password);
       Client::sendMessage(%clientId, 1, "Your password has been sent to your SpyMod client script");
     }
-  } else if (%right == 0) {
-    Client::sendMessage(%clientId, 1, "Incorrect password (your chat is now unblocked)");
   } else if (%right == -1) {
+    Client::sendMessage(%clientId, 1, "Incorrect password (your chat is now unblocked)");
+  } else if (%right == -2) {
     return;
   }
 
