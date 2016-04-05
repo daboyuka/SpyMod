@@ -1,0 +1,29 @@
+# TRIBES things
+EULA.txt
+InfiniteSpawn.exe
+ReadMe.htm
+Recordings/
+Sierra.ico
+Sierra.inf
+T1Vista.exe
+Temp/
+Tribes.exe
+Uninst.isu
+attwns.ico
+console.cs
+console.log
+missionlighting.cs
+missionlighting.exe
+readme.txt
+readme111.txt
+release.txt
+smackw32.dll
+sounds/
+tribesgame.log
+tribeslogo.jpg
+unTribes.exe
+won.ico
+
+# Windows/IDE things
+.project
+desktop.ini

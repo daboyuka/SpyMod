@@ -1,0 +1,27 @@
+# Standard TRIBES stuff
+ClientPrefs.cs
+GameServerList.cs
+IRCServers.cs
+Players.cs
+ServerPrefs.cs
+badwords.cs
+banlist.cs
+buildmissionlist.cs
+config.cs
+configBackup.cs
+configNormal.cs
+configSpyMod.cs
+database.cs
+databaseLookup.cs
+joystick.cs
+maketerrain.cs
+newMission.cs
+play.gui
+spyH4xx0rs.cs
+spyModeratorReports.cs
+spyServerStatus.cs
+spymodScript.cs
+spymodSettings.cs
+spymodoptions.gui
+terrains.cs
+uninstallSpyModScript.cs
