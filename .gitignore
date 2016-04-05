@@ -27,3 +27,6 @@ won.ico
 # Windows/IDE things
 .project
 desktop.ini
+
+# DOX mappack things
+DOX mappack README.txt
