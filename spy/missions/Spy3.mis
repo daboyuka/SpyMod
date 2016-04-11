@@ -389,7 +389,7 @@ instant SimGroup "MissionGroup" {
 };
 //--- export object end ---//
 
-setSpawnBuyList($ITEM_SET_DM);
+ItemGroup::setAsSpawnList(spawn_rand_dm);
 
 exec(dm);
 $DMScoreLimit = 0;

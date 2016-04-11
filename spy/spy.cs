@@ -171,7 +171,9 @@ function createServer(%mission, %dedicated) {
 
    exec("misc\\fireworkx.cs");
    
-   exec("missions\\XmasMods.cs");
+   exec("misc\\itemSets2.cs");
+
+   //exec("missions\\XmasMods.cs");
 
    //exec("ai\\superai.cs");
    //exec("ai\\sniperai.cs");
