@@ -1,5 +1,15 @@
 $PI = 3.141592653589793238;
 
+function error(%fmt, %a0, %a1, %a2, %a3, %a4, %a5, %a6, %a7, %a8) {
+	%err = sprintf(%fmt, %a0, %a1, %a2, %a3, %a4, %a5, %a6, %a7); // Note: sprintf takes a maximum of 8 extra args, despite help message
+	dbecho(0, "ERROR: " @ %err);
+	trace();
+}
+
+function assert(%cond, %fmt, %a0, %a1, %a2, %a3, %a4, %a5, %a6, %a7) {
+	if (!%cond) error(%fmt, %a0, %a1, %a2, %a3, %a4, %a5, %a6, %a7);
+}
+
 function abs(%x) {
   if (%x >= 0) return %x;
   else return -%x;
@@ -173,7 +183,7 @@ function invoke(%func, %numArgs, %arg0, %arg1, %arg2, %arg3, %arg4, %arg5, %arg6
   %cmd = %func @ tern(%numArgs > 0, "(\"" @ %arg0 @ "\"", "(");
   for (%i = 1; %i < %numArgs; %i++) %cmd = %cmd @ ",\"" @ %arg[%i] @ "\"";
   %cmd = %cmd @ ");";
-  eval(%cmd);
+  return eval(%cmd);
 }
 
 function radnomItems(%num, %an0, %an1, %an2, %an3, %an4, %an5, %an6, %an7, %an8) {
@@ -251,6 +261,17 @@ function String::splitAfter(%str, %c) {
 	} else {
 		return String::getSubStr(%str, %idx+1, 10240);
 	}	
+}
+
+function String::startsWith(%s, %prefix) {
+	%len = String::length(%prefix);
+	return (String::NCompare(%s, %prefix, %len) == 0);
+}
+
+function String::substr(%s, %off, %len) {
+	%off = defval(%off, 0);
+	%len = defval(%len, 10240);
+	return String::getSubStr(%s, %off, %len);
 }
 
 function char(%str) { return String::ICompare(String::getSubStr(%str,0,1), "\x00"); }
@@ -343,6 +364,10 @@ function isClientObject(%x) {
 
 function isServerFocused() {
   return getManagerID() == 2048;
+}
+
+function isItemData(%itemData) {
+	return %itemData.shapeFile != "False"; // equals "" if not set, but only equals "False" if not an item (or if explicitly set to "False", I guess...)
 }
 
 //
