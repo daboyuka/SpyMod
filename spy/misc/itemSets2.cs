@@ -138,6 +138,10 @@ function ItemGroup::clear(%groupName) {
 		$ITEM_GROUPS[%groupName, %i] = "";
 }
 
+function ItemGroup::clearAll() {
+	deleteVariables("$ITEM_GROUPS*");
+}
+
 // Returns true iff %groupName consists of only items (no subgroups or funcs)
 function ItemGroup::isGroupRealized(%groupName) {
 	for (%i = 0; %i < $ITEM_GROUPS[%groupName]; %i++) {
@@ -334,56 +338,4 @@ function ItemGroupFunc::randselectInGroup(%groupName, %args) {
 	}
 }
 
-deleteVariables("$ITEM_GROUPS*"); // Clear any previous item groups, to be safe
-
-//
-// Basic item groups
-//
-
-ItemGroup::makeEmptyGroup(empty); // Might be useful for convenience?
-
-ItemGroup::addItemsWithAmmo(weps_handgun,   "Magnum MG27 Magdalon");
-ItemGroup::addItemsWithAmmo(weps_rifle,     "Challenger Raider Stormbow");
-ItemGroup::addItemsWithAmmo(weps_heavy,     "Dragon Tornado Shotgun2");
-ItemGroup::addItemsWithAmmo(weps_explosive, "GrenadeLauncher2 RocketLauncher DoomSlayer");
-ItemGroup::addItemsWithAmmo(weps_misc,      "Flamer AGP84 Knife");
-
-ItemGroup::addGroupsFlattened(weps_all, "weps_handgun weps_rifle weps_heavy weps_explosive weps_misc");
-
-ItemGroup::addItemsWithAmmo(grenades, "SmokeGrenadeItem DistractionGrenadeItem GasGrenadeItem SpikeGrenadeItem");
-
-ItemGroup::addItemsWithAmmo(gadgets, "Binoculars PlasticMineAmmo Grappler Toolbox");
-
-ItemGroup::addItem(packs, ParachutePack);
-
-
-
-ItemGroup::addItemsWithAmmo(gadgets_dm, "PlasticMineAmmo Grappler");
-
-ItemGroup::addItemsWithAmmo(grenades_dm, "SmokeGrenadeItem GasGrenadeItem");
-
-//
-// Spawn sets
-//
-ItemGroup::addGroups        (spawn_all, "weps_handgun weps_rifle weps_heavy weps_explosive weps_misc grenades gadgets");
-
-ItemGroup::addGroups        (spawn_dm_nograp, "weps_handgun weps_rifle weps_heavy weps_explosive weps_misc grenades_dm");
-ItemGroup::addItemWithAmmo  (spawn_dm_nograp, PlasticMineAmmo);
-
-ItemGroup::addGroup(spawn_dm, spawn_dm_nograp);
-ItemGroup::addItem (spawn_dm, Grappler);
-
-ItemGroup::addItemsWithAmmo(spawn_mg_only, "MG27 Grappler SmokeGrenadeItem");
-
-ItemGroup::addItemsWithAmmo(spawn_knife_only, "Knife SmokeGrenadeItem");
-
-ItemGroup::addItemsWithAmmo(spawn_itembuy, "MG27 Knife Grappler SmokeGrenadeItem");
-
-ItemGroup::addItemsWithAmmo(spawn_mg_knife, "MG27 Knife SmokeGrenadeItem");
-
-ItemGroup::addFunc         (spawn_rand_dm, randselectInGroup, "1 weps_rifle");
-ItemGroup::addFunc         (spawn_rand_dm, randselectInGroup, "1 weps_heavy");
-ItemGroup::addFunc         (spawn_rand_dm, randselectInGroup, "1 weps_handgun");
-ItemGroup::addFunc         (spawn_rand_dm, randselectInGroup, "1 weps_misc");
-ItemGroup::addItemWithAmmo (spawn_rand_dm, SmokeGrenadeItem);
-ItemGroup::addItemsWithAmmo(spawn_rand_dm, "PlasticMineAmmo Grappler");
+exec("misc\\itemSets2Sets.cs");
