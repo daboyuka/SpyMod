@@ -139,6 +139,7 @@ function createServer(%mission, %dedicated) {
    exec("weapons\\dummynader.cs");
    exec("gadgets\\binocs.cs");
    exec("gadgets\\grappler.cs");
+   exec("gadgets\\grappwner.cs");
    exec("gadgets\\spybot.cs");
    exec("gadgets\\plasticMine.cs");
    exec("gadgets\\parachute.cs");

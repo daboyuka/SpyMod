@@ -258,6 +258,9 @@ function ItemGroup::setAsSpawnList(%groupName) {
 		%count = getWord(%entry, 1);
 		$spawnItems[%i++ - 1] = %count @ " " @ %item;
 	}
+
+	echo("Invoked ItemGroup::setAsSpawnList(\"" @ %groupName @ "\"), produced:");
+	ItemGroup::print(%tmp);
 	
 	ItemGroup::clear(%tmp);
 }
@@ -336,6 +339,43 @@ function ItemGroupFunc::randselectInGroup(%groupName, %args) {
 	for (%i = 0; %i < %selN; %i++) {
 		ItemGroup::addRaw(%groupName, %sel[%i]);
 	}
+	
+	echo("Finished randselectInGroup:");
+	ItemGroup::print(%groupName);
+}
+
+ItemGroup::registerFunc(randselect);
+function ItemGroupFunc::randselect(%groupName, %args) {
+	ItemGroup::checkGroup(%groupName);
+
+	%selN = getWord(%args, 0);
+
+	// Select the entries to use
+	for (%i = 0; true; %i++) {
+		%entry = getWord(%args, %i + 1);
+		if (%entry == -1)
+			break;
+
+		if (%i < %selN) {
+			// First %selN entries get added immediately
+			%sel[%i] = %entry;
+		} else {
+			// Additional entries have decreasing chance to overwrite existing ones
+			%j = randint(%i + 1);
+			if (%j < %selN)
+				%sel[%j] = %entry;
+		}
+	}
+
+	%selN = min(%selN, %i);
+	
+	// Add those entries into the output (use addRaw to simply copy the entry line into the group)
+	for (%i = 0; %i < %selN; %i++) {
+		ItemGroup::addRaw(%groupName, %sel[%i]);
+	}
+	
+	echo("Finished randselect:");
+	ItemGroup::print(%groupName);
 }
 
 exec("misc\\itemSets2Sets.cs");

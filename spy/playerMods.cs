@@ -7,6 +7,7 @@ function Player::onAdd(%this) {
 function Player::onKilled(%this) {
       if (%this.usingBinocs) Binoculars::deactivate(%this);
       if (%this.grappling) schedule("Grappler::ungrapple("@%this@");", 5);
+	  if (%this.grappwning) schedule("Grappwner::ungrappwn("@%this@");", 5);
 
 	if (Player::isAIControlled(%this) && %this.aiName != "") AI::onAIKilled(%this.aiName, %this);
 
@@ -124,6 +125,14 @@ function Player::onDamage(%this,%type,%value,%pos,%vec,%mom,%vertPos,%quadrant,%
 
     if (%this.grapplerShotOff && Player::getClient(%this) != %this.grapplerDislodger) {
       %object = %this.grapplerDislodger;
+      %type = $GrappleFallDamageType;
+    }
+    if (%this.grapplerShotOff && Player::getClient(%this) != %this.grapplerDislodger) {
+      %object = %this.grapplerDislodger;
+      %type = $GrappleFallDamageType;
+    }
+    if (%this.grappwnerShotOff && Player::getClient(%this) != %this.grappwnerDislodger) {
+      %object = %this.grappwnerDislodger;
       %type = $GrappleFallDamageType;
     }
   }
@@ -400,6 +409,7 @@ function Client::takeControl(%clientId, %objectId, %contact) {
 
 function Player::deactivateVelocityModdingItems(%player) {
   if (%player.grappling) Grappler::ungrapple(%player);
+  if (%player.grappwning) Grappwner::ungrappwn(%player);
   if (%player.parachuting) ParachutePack::unparachute(%player);
   if (%player.wallClimbing) WallClimber::unWallClimb(%player);
 }

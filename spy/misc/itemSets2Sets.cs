@@ -82,4 +82,4 @@ ItemGroup::addItemsWithAmmo(spawn_snipe, "MG27 Challenger Raider Stormbow SmokeG
 ItemGroup::addItemsWithAmmo(spawn_steamroller, "Magnum Tornado Shotgun2 Flamer Knife PlasticMineAmmo SpikeGrenadeItem");
 
 // spawn_dm_rand: random selection among spawn sets suitable for fun DMs
-ItemGroup::addFunc(spawn_dm_rand, randselectInGroup, "1 spawn_balanced_rand spawn_explosive spawn_steamroller spawn_crazyshot spawn_snipe spawn_knife_grap spawn_mg_only");
+ItemGroup::addFunc(spawn_dm_rand, randselect, "1 spawn_balanced_rand spawn_explosive spawn_steamroller spawn_crazyshot spawn_snipe spawn_knife_grap spawn_mg_only");
