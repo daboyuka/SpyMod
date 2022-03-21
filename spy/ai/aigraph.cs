@@ -143,7 +143,7 @@ function AIGraph::buildGraph(%markerGroup, %connectedGroups, %edgeHeap) {
   deleteObject(%edgeHeap);
   deleteObject(%los);
 
-  deleteFunctions("moveObject");
+  deleteFunctions("moveObjectTo");
 }
 
 ///////////////////

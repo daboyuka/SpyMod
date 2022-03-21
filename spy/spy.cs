@@ -104,6 +104,7 @@ function createServer(%mission, %dedicated) {
    exec("misc\\lockon.cs");
    exec("misc\\damagescales.cs");
    exec("misc\\teambalance.cs");
+   exec("misc\\scriptgun.cs");
 
    exec(time);
    Time::initTime();
@@ -180,16 +181,19 @@ function createServer(%mission, %dedicated) {
    //exec("ai\\sniperai.cs");
    //exec("ai\\dumbai.cs");
    //exec("ai\\soliderai.cs");
-   exec("ai\\aiutil.cs");
-   exec("ai\\aistatesystem2.cs");
-   exec("ai\\aigraph.cs");
-   exec("ai\\aimacros.cs");
-   exec("ai\\dmai2.cs");
-   exec("ai\\coopai\\guard.cs");
+   //exec("ai\\aiutil.cs");
+   //exec("ai\\aistatesystem2.cs");
+   //exec("ai\\aigraph.cs");
+   //exec("ai\\aimacros.cs");
+   //exec("ai\\dmai2.cs");
+   //exec("ai\\coopai\\guard.cs");
+   exec("ai2\\ai2.cs");
 
    exec(ads);
    exec(consoleCommands);
    exec(remotes);
+
+   exec(experiments);
 
    //exec(xmas2); // W0000000000000000T!!!
 

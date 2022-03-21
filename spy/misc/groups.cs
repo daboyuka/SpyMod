@@ -44,3 +44,18 @@ function Group::getNextLeaf(%topgroup, %obj) {
   if (%next == -1) return -1;
   return Group::getFirstDescendant(%next);
 }
+
+sethelp("Group::instantFile", "filename ?group", "Loads the instant objects in filename into the given group (or group 0 if omitted)");
+function Group::instantFile(%filename, %group) {
+	if (%group == "") %group = 0;
+
+	setInstantGroup(%group);
+
+	%oldcount = Group::objectCount(%group);
+	exec(%filename);
+	%newcount = Group::objectCount(%group);
+
+	if (%newcount != %oldcount + 1) return -1;
+
+	return Group::getObject(%group, %oldcount);
+}
