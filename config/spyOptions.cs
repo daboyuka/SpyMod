@@ -76,7 +76,7 @@ $Server::JoinMOTDArgs[2] = "";
 $Server::MODInfo = "Welcome to SpyMod!\nGrapplers, magnums, machine guns, plastique explosives...\nJust have fun and behave!";
 
 $Server::TourneyMode = false;             // Enable tournament mode
-$Server::Port = 28005;                    // Socket port to run the server on
+$Server::Port = 28001;                    // Socket port to run the server on
 $Server::MaxPlayers = 32;                 // Max players that can be on at one time
 $Server::FloodProtectionEnabled = "true"; // Enable chat flood protection
 $pref::LastMission = "Spy3";              // First mission to use when server starts
@@ -117,7 +117,11 @@ $Server::IRCReporting::serverPort = 6667;
 $Server::IRCReporting::room = "#BobsSpyModServer";
 $Server::IRCReporting::nickname = "TehBob";
 
-
-
 $Server::currentMaster = 0;
-$Server::Master0 = "t1m1.tribes0.com:28000";//"t1m1.masters.dynamix.com:28000 t1m2.masters.dynamix.com:28000 t1m3.masters.dynamix.com:28000t1m1.masters.tribesmasterserver.com:28000 t1m1.pu.net:28000 t1m1.tribes0.com:28000 skbmaster.ath.cx:28000 kigen.ath.cx:28000";
+$Server::Master0 = "t1m1.pu.net:28000";//"t1m1.masters.dynamix.com:28000 t1m2.masters.dynamix.com:28000 t1m3.masters.dynamix.com:28000t1m1.masters.tribesmasterserver.com:28000 t1m1.pu.net:28000 t1m1.tribes0.com:28000 skbmaster.ath.cx:28000 kigen.ath.cx:28000";
+
+// --- Network Options ------------------------------------------------------------------------------------------------------
+// Better packet parameters, for smoother connections, both client and server.
+$pref::PacketFrame = "32";
+$pref::PacketRate = "30";
+$pref::PacketSize = "1400";
