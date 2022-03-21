@@ -39,6 +39,7 @@ $AdminPrivileges["setTourneyMode"] = $Powers::POWER_ADMIN;
 $AdminPrivileges["setObsGlobalChat"] = $Powers::POWER_ADMIN;
 $AdminPrivileges["setAllowTeamchange"] = $Powers::POWER_ADMIN;
 $AdminPrivileges["setEnforceFairTeams"] = $Powers::POWER_ADMIN;
+$AdminPrivileges["setSpawnItems"] = $Powers::POWER_ADMIN;
 
 $AdminPrivileges["forceTeamChange"] = $Powers::POWER_ADMIN;
 
