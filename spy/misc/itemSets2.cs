@@ -1,8 +1,11 @@
-// $ITEM_GROUP_FUNCS[name] = true
 // $ITEM_GROUPS[name] = numItems
 // $ITEM_GROUPS[name, i] = item count | group | func args
+// $ITEM_GROUPS[name, "desc"] = string (human-readable name; also marks as admin-settable)
+// $ITEM_GROUPS_ADMINABLE = string (space-separated group names that are admin-settable via menu)
 
+// $ITEM_GROUP_FUNCS[name] = true
 
+// $Admin::customSpawnItemSet = group @ " " @ mode (next = autoclear after next mission, perm = never autoclear)
 
 function ItemGroup::getEntryType(%entryName) {
 	if (isItemData(%entryName))
@@ -244,8 +247,10 @@ function ItemGroup::makeTmp() {
 	return %tmp;
 }
 
-function ItemGroup::setAsSpawnList(%groupName) {
-	if (!ItemGroup::isGroup(%groupName)) { echo("ERROR: attempt to set non-group '" @ %groupName @ "' as spawn list"); trace(); return; }
+function ItemGroup::setAsSpawnList(%groupName, %force) {
+	if (!assert(ItemGroup::isGroup(%groupName), "may only use group as spawn list, not " @ %groupName)) return;
+	
+	if (!%force && $Admin::customSpawnItemSet != "") return; // cannot update spawn item list if custom list in effect
 	
 	clearSpawnBuyList();
 	for (%t = 0; %t < getNumTeams(); %t++) clearTeamSpawnBuyList(%t);
@@ -259,14 +264,16 @@ function ItemGroup::setAsSpawnList(%groupName) {
 		$spawnItems[%i++ - 1] = %count @ " " @ %item;
 	}
 
-	echo("Invoked ItemGroup::setAsSpawnList(\"" @ %groupName @ "\"), produced:");
-	ItemGroup::print(%tmp);
-	
 	ItemGroup::clear(%tmp);
+	
+	if ((%desc = ItemGroup::getDescription(%groupName)) != "")
+		messageAll(0, "Match weapon set: " @ %desc);
 }
 
-function ItemGroup::setAsTeamSpawnList(%groupName, %team) {
-	if (!ItemGroup::isGroup(%groupName)) { echo("ERROR: attempt to set group '" @ %groupName @ "' as team spawn list"); trace(); return; }
+function ItemGroup::setAsTeamSpawnList(%groupName, %team, %force) {
+	if (!assert(ItemGroup::isGroup(%groupName), "may only use group as spawn list, not " @ %groupName)) return;
+	
+	if (!%force && $Admin::customSpawnItemSet != "") return; // cannot update spawn item list if custom list in effect
 	
 	clearTeamSpawnBuyList(%team);
 
@@ -280,35 +287,42 @@ function ItemGroup::setAsTeamSpawnList(%groupName, %team) {
 	}
 	
 	ItemGroup::clear(%tmp);
+	
+	if ((%desc = ItemGroup::getDescription(%groupName)) != "")
+		teamMessages(0, %team, "Match weapon set: " @ %desc);
 }
 
+function ItemGroup::getDescription(%groupName) { return $ITEM_GROUPS[%groupName, desc]; }
+function ItemGroup::makeAdminable(%groupName, %desc) {
+	if (!assert(%desc != "", "missing description")) return;
+	
+	if (!$ITEM_GROUPS[%groupName, desc]) $ITEM_GROUPS_ADMINABLE = $ITEM_GROUPS_ADMINABLE @ " " @ %groupName;
+	$ITEM_GROUPS[%groupName, desc] = %desc;
+}
+function ItemGroup::listAdminables() { return $ITEM_GROUPS_ADMINABLE; } // returns list (string of words) of admin-settable item sets
 
-//ItemGroup::registerFunc(randselect);
-//function ItemGroupFunc::randselect(%groupName, %args) {
-//	%selN = getWord(%args, 0);
-//	for (%i = 0; (%entry = getWord(%args, %i + 1)) != -1; %i++) {
-//		if (%i < %selN) {
-//			// First %selN items/groups get added immediately
-//			%sel[%i] = %entry;
-//		} else {
-//			// Additional items/groups have decreasing chance to overwrite existing ones
-//			%j = randint(%i + 1);
-//			if (%j < %selN)
-//				%sel[%j] = %entry;
-//		}
-//	}
-//	
-//	%selN = min(%selN, %i); // trim to the number of entries actually seen if less
-//	for (%i = 0; %i < %selN; %i++) {
-//		//%entry = %sel[%i];
-//		//if (ItemGroup::isGroup(%entry)) {
-//		//	ItemGroup::addGroup(%groupName, %entry);
-//		//} else {
-//		//	ItemGroup::addItem(%groupName, %entry);
-//		//}
-//		ItemGroup::addWeaponAndAmmo(%groupName, %sel[%i]);
-//	}
-//}
+function ItemGroup::setAdminCustomSpawnItemSet(%groupName, %mode) {
+	if (%groupName == "" && %mode == "") {
+		$Admin::customSpawnItemSet = "";
+		return;
+	}
+	
+	if (!assert(%mode != "", "mode must be set")) return;
+	$Admin::customSpawnItemSet = %groupName @ " " @ %mode;
+}
+function ItemGroup::postMissionInit() {
+	if ($Admin::customSpawnItemSet == "") return;
+
+	%groupName = getWord($Admin::customSpawnItemSet, 0);
+	%mode = getWord($Admin::customSpawnItemSet, 1);
+
+    ItemGroup::setAsSpawnList(%groupName, true);
+	if (%mode == "next") $Admin::customSpawnItemSet = ""; // clear "next" mode after a single mission
+}
+
+//
+// --- Register Item Set Functions ----------
+//
 
 ItemGroup::registerFunc(randselectInGroup);
 function ItemGroupFunc::randselectInGroup(%groupName, %args) {

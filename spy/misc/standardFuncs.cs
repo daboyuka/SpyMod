@@ -8,6 +8,7 @@ function error(%fmt, %a0, %a1, %a2, %a3, %a4, %a5, %a6, %a7, %a8) {
 
 function assert(%cond, %fmt, %a0, %a1, %a2, %a3, %a4, %a5, %a6, %a7) {
 	if (!%cond) error(%fmt, %a0, %a1, %a2, %a3, %a4, %a5, %a6, %a7);
+	return %cond;
 }
 
 function abs(%x) {
