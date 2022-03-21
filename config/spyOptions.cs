@@ -41,6 +41,7 @@ $Server::VotingTime = 20;                 // The time to allow for a vote
 
 // --- Game Options ---------------------------------------------------------------------------------------------------------
 
+$Server::victoryScreenTime = 10;        // Seconds to wait on the victory screen before loading next mission
 $Server::warmupTime = 5;                // Seconds to wait ("warm up") at the beginning of each match
 $Server::timeLimit = 25;                // Minutes a match lasts for
 $Server::respawnTime = 2;               // Minimum number of seconds to wait after you die to respawn

@@ -326,7 +326,7 @@ function Server::loadMission(%missionName, %immed) {
 //   newObject(ConsoleScheduler, SimConsoleScheduler);
    if (!%immed) {
      schedule("PlayerDatabase::export();", 1);
-     schedule("Server::finishMissionLoad();", 18);
+     schedule("Server::finishMissionLoad();", $Server::victoryScreenTime);
    } else {
      PlayerDatabase::export();
      Server::finishMissionLoad();
