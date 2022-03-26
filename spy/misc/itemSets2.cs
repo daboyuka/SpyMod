@@ -266,6 +266,7 @@ function ItemGroup::setAsSpawnList(%groupName, %force) {
 
 	ItemGroup::clear(%tmp);
 	
+	$ItemGroup::currentSpawnList = %groupName;
 	if ((%desc = ItemGroup::getDescription(%groupName)) != "")
 		messageAll(0, "Match weapon set: " @ %desc);
 }

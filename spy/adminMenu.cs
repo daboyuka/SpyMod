@@ -31,6 +31,15 @@ function Game::menuRequest(%clientId) {
 
   if ($Server::showWallOfN00bs && $H4XX0R::numHackers > 0)
     Client::addMenuItem(%clientId, %curItem++ @ "Wall of Noob Hackers", "wallOfN00bs");
+
+  if (%clientId.selClient == "")
+	  schedule("Menu::mainInfoLines(" @ %clientId @ ");", 0);
+}
+
+function Menu::mainInfoLines(%clientId) {
+  remoteEval(%clientId, setInfoLine, %line++, "Current map: " @ $missionName);
+  if ($ItemGroup::currentSpawnList != "" && (%desc = ItemGroup::getDescription($ItemGroup::currentSpawnList)) != "")
+	  remoteEval(%clientId, setInfoLine, %line++, "Spawn set: " @ %desc);
 }
 
 function Menu::votingMenu(%clientId) {

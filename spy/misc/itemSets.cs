@@ -219,6 +219,7 @@ function clearSpawnBuyList() {
   for(%i = 0; (%str = $spawnWeapons[%i]) != ""; %i++) $spawnWeapons[%i] = "";
   for(%i = 0; (%str = $spawnGadgets[%i]) != ""; %i++) $spawnGadgets[%i] = "";
   $itemSetType = $ITEM_SET_UNSET;
+  $ItemGroup::currentSpawnList = "";
 }
 
 function clearTeamSpawnBuyList(%t) {
