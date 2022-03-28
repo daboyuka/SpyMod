@@ -83,7 +83,7 @@ function AIGraph::generateConnectedGroups(%markerGroup) {
 }
 
 function AIGraph::calculateEdges(%markerGroup) {
-  %edgeHeap = Heap::newHeap();
+  %edgeHeap = Heap::new();
 
   %n = Group::objectCount(%markerGroup);
   for (%i = 0; %i < %n; %i++) {
@@ -94,7 +94,7 @@ function AIGraph::calculateEdges(%markerGroup) {
       %pos2 = GameBase::getPosition(%v2);
       %dist = Vector::getDistance(%pos1, %pos2);
 
-      Heap::add(%edgeHeap, %dist @ " " @ %v1 @ " " @ %v2);
+      Heap::push(%edgeHeap, %dist @ " " @ %v1 @ " " @ %v2);
     }
   }
 
@@ -111,7 +111,7 @@ function AIGraph::buildGraph(%markerGroup, %connectedGroups, %edgeHeap) {
   %los = newObject("", StaticShape, LOSer, true);
 
   while (Group::objectCount(%connectedGroups) > 1) {
-    %edge = Heap::removeMin(%edgeHeap);
+    %edge = Heap::pop(%edgeHeap);
     if (%edge == "") {
       echo("Could not complete AI graph :(");
       break;
