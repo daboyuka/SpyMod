@@ -401,6 +401,8 @@ function Server::finishMissionLoad()
    for (%c = Client::getFirst(); %c != -1; %c = Client::getNext(%c))
      Game::refreshClientScore(%c);
 
+	ItemGroup::postMissionInit(); // if we had a custom item set for this round only, ensure it doesn't remain for the next
+
    // make sure the match happens within 5-10 hours.
    schedule("Server::CheckMatchStarted();", 3600);
    schedule("Server::nextMission();", 18000);
