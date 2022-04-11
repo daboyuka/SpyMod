@@ -255,13 +255,16 @@ function String::escapeGood(%str) {
   return %str;
 }
 
+function String::splitBefore(%str, %c) {
+	%idx = String::findSubStr(%str, %c);
+	if (%idx == -1) return "";
+	return String::getSubStr(%str, 0, %idx);
+}
+
 function String::splitAfter(%str, %c) {
 	%idx = String::findSubStr(%str, %c);
-	if (%idx == -1) {
-		return "";
-	} else {
-		return String::getSubStr(%str, %idx+1, 10240);
-	}	
+	if (%idx == -1) return "";
+	return String::getSubStr(%str, %idx+1, 10240);
 }
 
 function String::startsWith(%s, %prefix) {
@@ -274,6 +277,16 @@ function String::substr(%s, %off, %len) {
 	%len = defval(%len, 10240);
 	return String::getSubStr(%s, %off, %len);
 }
+
+function String::stripPrefix(%s, %c) {
+	%l = String::length(%c);
+	while (String::startsWith(%s, %c)) %s = String::substr(%s, %l);
+	return %s;
+}
+
+// usage: for (%w = nextWord(%s); (%s = popWord(%s)) || %w; %w = nextWord(%s)) ...;
+function nextWord(%s) { return String::splitBefore(String::stripPrefix(%s, " "), " "); }
+function popWord(%s) { return String::splitAfter(String::stripPrefix(%s, " "), " "); }
 
 function char(%str) { return String::ICompare(String::getSubStr(%str,0,1), "\x00"); }
 
