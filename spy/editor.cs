@@ -623,9 +623,9 @@ function ME::init()
       $ME::ShowGrabHandles = true;
       $ME::SnapToGrid = false;
 
-      $ME::XGridSnap = 1;
-      $ME::YGridSnap = 1;
-      $ME::ZGridSnap = 0.001;
+      $ME::XGridSnap = 0.125;
+      $ME::YGridSnap = 0.125;
+      $ME::ZGridSnap = 0.125;
 
       $ME::ConstrainX = false;
       $ME::ConstrainY = false;
@@ -644,7 +644,7 @@ function ME::init()
       $ME::DropToSelectedObject = false;
 
       $ME::ObjectsSnapToTerrain = false;
-      $ME::UsePlaneMovement = false;
+      $ME::UsePlaneMovement = true;
 
       $ME::LightQuick = false;
       $ME::terrainSeed = 0;

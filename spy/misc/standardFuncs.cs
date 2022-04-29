@@ -178,6 +178,8 @@ function TransformMatrix::addToPos(%matrix, %pos) {
   return Matrix::subMatrix(%matrix, 3, 4, 3, 3) @ " " @ Vector::add(Matrix::subMatrix(%matrix, 3, 4, 3, 1, 0, 3), %pos);
 }
 
+function GameBase::addPosition(%this, %delta) { GameBase::setPosition(%this, Vector::add(GameBase::getPosition(%this), %delta)); }
+
 
 
 function invoke(%func, %numArgs, %arg0, %arg1, %arg2, %arg3, %arg4, %arg5, %arg6, %arg7, %arg8, %arg9) {

@@ -142,3 +142,23 @@ function MissionObjectList::onSelected(%world, %obj)
    
    ME::onSelected( %world, %obj );
 }
+
+function MENudge(%dir) {
+	if ($ME::InspectObject == "") return;
+	
+	if (%dir == left)       %delta = -$ME::XGridSnap @ " 0 0";
+	else if (%dir == right) %delta = $ME::XGridSnap @ " 0 0";
+	else if ($ME::Mod1) { // ctrl
+		if (%dir == up)        %delta = "0 0 " @ $ME::ZGridSnap;
+		else if (%dir == down) %delta = "0 0 " @ -$ME::ZGridSnap;
+	} else {		
+		if (%dir == up)        %delta = "0 " @ $ME::YGridSnap @ " 0";
+		else if (%dir == down) %delta = "0 " @ -$ME::YGridSnap @ " 0";
+	}
+
+	if ($ME::Mod2) %delta = Vector::mul(%delta, 10); // shift
+	
+	focusServer();
+	Group::iterateRecursive(MESelectionSet, GameBase::addPosition, %delta);
+	focusClient();
+}

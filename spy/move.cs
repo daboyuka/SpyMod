@@ -70,13 +70,18 @@ if( $ME::Loaded == "true" )
    }
 
    // movement binds
-   bindCommand( keyboard, make, 0, to, "ME::Move(1024);");
-   for( %i = 1; %i < 10; %i++ )
-      bindCommand( keyboard, make, %i, to, "ME::Move(" @ ( 1 << %i ) @ ");" );
+   for( %i = 1; %i <= 10; %i++ )
+      bindCommand( keyboard, make, %i%10, to, "ME::Move(" @ (0.25 * (1 << %i)) @ ");" );
 
    // toggle key for plane movement
    bindCommand( keyboard, make, capslock, to, "METogglePlaneMovement();" );
    bindCommand( keyboard, make, tab, to, "//");
+   
+   // nudging
+   bindCommand( keyboard, make, up, to, "MENudge(up);");
+   bindCommand( keyboard, make, down, to, "MENudge(down);");
+   bindCommand( keyboard, make, left, to, "MENudge(left);");
+   bindCommand( keyboard, make, right, to, "MENudge(right);");
 }
 else
 {

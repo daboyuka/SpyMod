@@ -122,8 +122,6 @@ function Tank3::onDamage(%this,%type,%value,%pos,%vec,%mom,%object) {
   if (GameBase::getDamageLevel(%this) / Tank3.maxDamage > 0.6) Effects::burn(%this, "-2 -2 1", "2 3 1", 5);
 }
 
-function GameBase::addPosition(%this, %x) { GameBase::setPosition(%this, Vector::add(GameBase::getPosition(%this), %x)); }
-
 function Tank3::updateOld(%this) {
   if (!isObject(%this)) return;
 
