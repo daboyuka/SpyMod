@@ -1,0 +1,206 @@
+//--- export object begin ---//
+instant SimGroup "MissionGroup" {
+	instant SimGroup "Volumes" {
+		instant SimVolume "InterfaceVol" {
+			fileName = "Interface.vol";
+		};
+		instant SimVolume "entities" {
+			fileName = "Entities.vol";
+		};
+		instant SimVolume "World" {
+			fileName = "alienWorld.vol";
+		};
+		instant SimVolume "WorldTerrain" {
+			fileName = "alienTerrain.vol";
+		};
+		instant SimVolume "World" {
+			fileName = "lushWorld.vol";
+		};
+		instant SimVolume "WorldTerrain" {
+			fileName = "lushTerrain.vol";
+		};
+		instant SimVolume "TedFile" {
+			fileName = "Raindance.ted";
+			locked = "true";
+		};
+		instant SimVolume "lushDML" {
+			fileName = "lushDML.vol";
+		};
+	};
+	instant SimGroup "World" {
+		instant SimPalette "Palette" {
+			fileName = "lush.day.ppl";
+		};
+		instant MissionCenterPos "MissionCenter" {
+			x = "-256";
+			y = "-256";
+			w = "512";
+			h = "512";
+		};
+	};
+	instant SimGroup "Landscape" {
+		instant StarField "stars" {
+			inFrontOfSky = "True";
+			colors[0] = "1 1 1";
+			colors[1] = "0.5 0.5 0.5";
+			colors[2] = "0.25 0.25 0.25";
+		};
+		instant Sky "Sky" {
+			dmlName = "";
+			skyColor = "0 0 0";
+			hazeColor = "0 0 0";
+			featurePosition = "0";
+			size = "600";
+			textures[0] = "0";
+			textures[1] = "1";
+			textures[2] = "2";
+			textures[3] = "3";
+			textures[4] = "4";
+			textures[5] = "5";
+			textures[6] = "6";
+			textures[7] = "7";
+			textures[8] = "8";
+			textures[9] = "9";
+			textures[10] = "10";
+			textures[11] = "11";
+			textures[12] = "12";
+			textures[13] = "13";
+			textures[14] = "14";
+			textures[15] = "15";
+		};
+		instant Planet "Sun" {
+			fileName = "";
+			azimuth = "0";
+			incidence = "60";
+			castShadows = "True";
+			useLensFlare = "False";
+			intensity = "0.69999 0.69999 0.69999";
+			ambient = "0.29999 0.29999 0.29999";
+			size = "2000";
+			distance = "11000";
+		};
+		instant SimTerrain "Terrain" {
+			tedFileName = "Raindance.dtf";
+			visibleDistance = "400";
+			hazeDistance = "250";
+			hazeVerticalMin = "9.88132e-39";
+			hazeVerticalMax = "8.10718e-39";
+			perspectiveDistance = "100";
+			screenSize = "61";
+			contGravity = "0 0 -20";
+			contDrag = "0";
+			contHeight = "10000";
+			position = "-768 -768 -1000";
+			rotation = "0 0 0";
+			terrainType = "flat";
+		};
+	};
+};
+//--- export object end ---//
+
+$excludeVol["Interface.vol"] = true;
+$excludeVol["Entities.vol"] = true;
+$excludeVol["lushWorld.vol"] = true;
+$excludeVol["lushTerrain.vol"] = true;
+$excludeVol["lushDML.vol"] = true;
+$excludeVol["alienWorld.vol"] = true;
+$excludeVol["alienTerrain.vol"] = true;
+
+function addVols(%vols, %pat) {
+	// setInstantGroup(%vols);
+	for (%f = File::findFirst(%pat); %f != ""; %f = File::findNext(%pat)) {
+		if (String::findSubStr(%f, "\\") != -1) continue;
+		if ($excludeVol[%f]) continue;
+		if ($loadedVol[%f]) continue;
+		$seenVol[%f] = true;
+
+		echo("Loading ", %f, "...");
+		addToSet(%vols, newObject(%f, SimVolume, %f));
+		// instant SimVolume %f {
+			// fileName = %f;
+		// };
+	}
+}
+
+%vols = nameToID("MissionGroup\\Volumes"); //newObject("NewVolumes", SimGroup);
+addVols(%vols, "*World.vol");
+addVols(%vols, "*Terrain.vol");
+addVols(%vols, "*DML.vol");
+addVols(%vols, "*.vol");
+
+exec("ShapeList.cs");
+EvalSearchPath();
+
+// UNIQUE p_inv.1.dis TesseractLT.vol
+// UNIQUE p_tower.1.dis TesseractLT.vol
+// UNIQUE p_platform.1.dis TesseractLT.vol
+// UNIQUE p_base.1.dis TesseractLT.vol
+// UNIQUE p_inv.0.dis TesseractLT.vol
+// UNIQUE p_tower.0.dis TesseractLT.vol
+// UNIQUE p_platform.0.dis TesseractLT.vol
+// UNIQUE p_base.0.dis TesseractLT.vol
+// UNIQUE MM_bridge.0.dis MiddayMayhemDeluxeLT.vol
+// UNIQUE MM_hangar.1.dis MiddayMayhemDeluxeLT.vol
+// UNIQUE block2.1.dis MiddayMayhemDeluxeLT.vol
+// UNIQUE MM_hangar.0.dis MiddayMayhemDeluxeLT.vol
+// UNIQUE block2.0.dis MiddayMayhemDeluxeLT.vol
+// UNIQUE jcbridgespan2.1.dis JaggedClawLT.vol
+// UNIQUE jcbridgespan1.1.dis JaggedClawLT.vol
+// UNIQUE jcbridgend2.1.dis JaggedClawLT.vol
+// UNIQUE jcbridgend1.1.dis JaggedClawLT.vol
+// UNIQUE jcbase.1.dis JaggedClawLT.vol
+// UNIQUE idariel.5.dis JaggedClawLT.vol
+// UNIQUE idariel.4.dis JaggedClawLT.vol
+// UNIQUE jctower_base.1.dis JaggedClawLT.vol
+// UNIQUE idariel.3.dis JaggedClawLT.vol
+// UNIQUE jcbridgespan2.0.dis JaggedClawLT.vol
+// UNIQUE jcbridgespan1.0.dis JaggedClawLT.vol
+// UNIQUE jcbridgend2.0.dis JaggedClawLT.vol
+// UNIQUE jcbridgend1.0.dis JaggedClawLT.vol
+// UNIQUE jcbase.0.dis JaggedClawLT.vol
+// UNIQUE idariel.2.dis JaggedClawLT.vol
+// UNIQUE idariel.1.dis JaggedClawLT.vol
+// UNIQUE jctower_base.0.dis JaggedClawLT.vol
+// UNIQUE idariel.0.dis JaggedClawLT.vol
+// UNIQUE id_uplinktower.0.dis IceDaggerLT.vol
+// UNIQUE mx3.0.dis IceDaggerLT.vol
+// UNIQUE idhangar.1.dis IceDaggerLT.vol
+// UNIQUE idariel.1.dis IceDaggerLT.vol
+// UNIQUE idtower.1.dis IceDaggerLT.vol
+// UNIQUE idhangar.0.dis IceDaggerLT.vol
+// UNIQUE idariel.0.dis IceDaggerLT.vol
+// UNIQUE idtower.0.dis IceDaggerLT.vol
+// UNIQUE hilde_DS.0.dis HildebrandLT.vol
+// UNIQUE hilde_BE.0.dis HildebrandLT.vol
+// UNIQUE cc_wall.1.dis CanyonCrusadeDeluxeLT.vol
+// UNIQUE cccommtower.1.dis CanyonCrusadeDeluxeLT.vol
+// UNIQUE ccwall_end.1.dis CanyonCrusadeDeluxeLT.vol
+// UNIQUE ccbunker.1.dis CanyonCrusadeDeluxeLT.vol
+// UNIQUE cccargoprism.13.dis CanyonCrusadeDeluxeLT.vol
+// UNIQUE cccargoprism.12.dis CanyonCrusadeDeluxeLT.vol
+// UNIQUE cccargoprism.11.dis CanyonCrusadeDeluxeLT.vol
+// UNIQUE ccbox.5.dis CanyonCrusadeDeluxeLT.vol
+// UNIQUE ccbox.4.dis CanyonCrusadeDeluxeLT.vol
+// UNIQUE cccargoprism.10.dis CanyonCrusadeDeluxeLT.vol
+// UNIQUE cccargoprism.9.dis CanyonCrusadeDeluxeLT.vol
+// UNIQUE ccbox.3.dis CanyonCrusadeDeluxeLT.vol
+// UNIQUE cccargoprism.8.dis CanyonCrusadeDeluxeLT.vol
+// UNIQUE cccargoprism.7.dis CanyonCrusadeDeluxeLT.vol
+// UNIQUE ccdswordlz.0.dis CanyonCrusadeDeluxeLT.vol
+// UNIQUE ccradartower.1.dis CanyonCrusadeDeluxeLT.vol
+// UNIQUE cc_wall.0.dis CanyonCrusadeDeluxeLT.vol
+// UNIQUE cccommtower.0.dis CanyonCrusadeDeluxeLT.vol
+// UNIQUE ccwall_end.0.dis CanyonCrusadeDeluxeLT.vol
+// UNIQUE ccbunker.0.dis CanyonCrusadeDeluxeLT.vol
+// UNIQUE ccradartower.0.dis CanyonCrusadeDeluxeLT.vol
+// UNIQUE ccbox.2.dis CanyonCrusadeDeluxeLT.vol
+// UNIQUE cccargoprism.6.dis CanyonCrusadeDeluxeLT.vol
+// UNIQUE cccargoprism.5.dis CanyonCrusadeDeluxeLT.vol
+// UNIQUE cccargoprism.4.dis CanyonCrusadeDeluxeLT.vol
+// UNIQUE cccargoprism.3.dis CanyonCrusadeDeluxeLT.vol
+// UNIQUE ccbox.1.dis CanyonCrusadeDeluxeLT.vol
+// UNIQUE cccargoprism.2.dis CanyonCrusadeDeluxeLT.vol
+// UNIQUE ccbox.0.dis CanyonCrusadeDeluxeLT.vol
+// UNIQUE cccargoprism.1.dis CanyonCrusadeDeluxeLT.vol
+// UNIQUE cccargoprism.0.dis CanyonCrusadeDeluxeLT.vol
+// UNIQUE ccbeaglelz.0.dis CanyonCrusadeDeluxeLT.vol
