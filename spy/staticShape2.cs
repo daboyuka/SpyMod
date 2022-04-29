@@ -379,3 +379,57 @@ StaticShapeData MainStation {
 	maxDamage = 1000.0;
    description = "Main Station";
 };
+
+
+
+DebrisData flashDebrisLarge {
+   type      = 0;
+   imageType = 0;
+   
+   mass       = 100.0;
+   elasticity = 0.25;
+   friction   = 0.5;
+   center     = { 0, 0, 0 };
+
+   animationSequence = -1;
+
+   minTimeout = 3.0;
+   maxTimeout = 6.0;
+
+   explodeOnBounce = 0.3;
+
+   damage          = 1000.0;
+   damageThreshold = 100.0;
+
+   spawnedDebrisMask     = 1;
+   spawnedDebrisStrength = 90;
+   spawnedDebrisRadius   = 0.2;
+
+   spawnedExplosionID = turretExp;
+
+   p = 1;
+
+   explodeOnRest   = True;
+   collisionDetail = 0;
+};
+
+StaticShapeData ServerRack {
+   description = "Server Rack";
+   shapeFile = "generator";
+	className = "ServerRack";
+	debrisId = flashDebrisLarge;
+	explosionId = turretExp;
+    maxDamage = 200;
+	visibleToSensor = true;
+	mapFilter = 4;
+	mapIcon = "M_generator";
+	damageSkinData = "objectDamageSkins";
+	shadowDetailMask = 16;
+};
+
+function ServerRack::onEnabled(%this)   { GameBase::setActive(%this,true); }
+function ServerRack::onDisabled(%this)  { GameBase::stopSequence(%this, 0); }
+function ServerRack::onDestroyed(%this)  { ServerRack::onDisabled(%this); }
+function ServerRack::onActivate(%this)   { GameBase::playSequence(%this,0,"power"); }
+function ServerRack::onDeactivate(%this) { GameBase::stopSequence(%this,0); }
+
